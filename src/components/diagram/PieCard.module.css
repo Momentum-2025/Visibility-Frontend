@@ -1,0 +1,123 @@
+.PieCard {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(44,62,80,0.07);
+  padding: 22px 22px 14px 22px;
+  /* max-width: 430px; */
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #35795c;
+}
+.title {
+  color: #20253a;
+  font-weight: 600;
+}
+.infoIcon {
+  border-radius: 50%;
+  background: #f3f4f6;
+  padding: 0 6px;
+  font-size: 13px;
+  color: #666;
+  margin-left: 2px;
+}
+.subtitle {
+  font-size: 1rem;
+  color: #8f98a5;
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.contentRow {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.pieChart {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+.pieInner {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.pieValue {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 1rem;
+  flex: 1;
+}
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+}
+.legendDot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  margin-right: 7px;
+  border: 2px solid #e8eaee;
+  display: inline-block;
+}
+.legendLabel {
+  color: #575e6c;
+  font-weight: 500;
+}
+.legendValue {
+  color: #20253a;
+  margin-left: auto;
+  font-size: 1.03rem;
+  font-weight: 700;
+}
+
+.miniLineRow {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+  gap: 16px;
+}
+
+.miniLineChart {
+  width: 55px;
+  height: 28px;
+  background: #f7f9fa;
+  border-radius: 7px;
+  box-shadow: 0 0.5px 2px rgba(44,62,80,0.04);
+  display: flex;
+  align-items: center;
+}
+
+.miniLineLabel {
+  font-size: 1rem;
+  color: #22c55e;
+  font-weight: 500;
+}

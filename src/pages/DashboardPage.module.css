@@ -1,0 +1,260 @@
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  /* background: #ffffff; */
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.heading {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #222336;
+}
+
+.saveBtn {
+  background: #eff3ff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-weight: 500;
+  color: #4567e7;
+  box-shadow: 0 1px 3px rgba(44, 62, 80, 0.07);
+  transition: background 0.2s;
+}
+.saveBtn:hover {
+  background: #dde5fa;
+}
+
+.filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.filterBtn {
+  background: rgba(255, 255, 255, 0.888);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  color: #30344f;
+  /* box-shadow: 0px 2px 7px rgba(44, 62, 80, 0.04); */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.closeX {
+  color: #e04a47;
+  font-size: 1.18rem;
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(44, 62, 80, 0.07);
+  margin-bottom: 24px;
+  padding: 0;
+  min-height: 115px;
+  overflow: hidden;
+}
+
+.statCard {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 28px 30px;
+  background: transparent;
+  min-width: 0;
+  min-height: 20px;/*115px*/
+  /* Remove border and shadow here, apply to parent (statsRow) instead */
+  border-right: 1px solid #eff0f2;
+}
+
+.statCard:last-child {
+  border-right: none;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #81878f;
+  font-weight: 500;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #21253a;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.platforms {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.platformIcon {
+  display: flex;
+  align-items: center;
+  background: #f7faff;
+  border-radius: 5px;
+  padding: 5px;
+  min-width: 30px;
+  min-height: 30px;
+  justify-content: center;
+}
+
+.platformLogo {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.compPresenceSection {
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(44, 62, 80, 0.065);
+  border-radius: 1.2rem;
+  padding: 23px 30px 36px 30px;
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #21253b;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sectionSub {
+  font-size: 0.97rem;
+  color: #98a2b3;
+}
+
+.compBarChart {
+  display: flex;
+  gap: 30px;
+  height: 130px;
+  align-items: end;
+  margin-top: 26px;
+  margin-bottom: 6px;
+}
+
+.barGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 54px;
+  position: relative;
+}
+.barStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.bar {
+  width: 24px;
+  border-radius: 5.5px;
+  transition: height 0.4s cubic-bezier(0.13, 1.03, 0.66, 0.99);
+  box-shadow: 0 0px 6px rgba(44, 62, 80, 0.07);
+}
+.bar12Weeks {
+  background: #fca971;
+}
+.bar4Weeks {
+  background: #ff7c2c;
+}
+
+.barLabel {
+  font-size: 0.98rem;
+  color: #21253a;
+  margin-top: 4px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.loading {
+  margin-top: 40px;
+  font-size: 1.17rem;
+  color: #81878f;
+}
+
+.error {
+  margin-top: 24px;
+  color: #e04a47;
+  background: #fff2f0;
+  border-radius: 10px;
+  padding: 15px 21px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(235, 76, 49, 0.1);
+}
+
+.compPresenceSection .donutsContainer,
+.chartCard {
+  align-items: center;
+}
+
+.compPresenceSection .canvas {
+  width: 220px !important;
+  height: 220px !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.compPresenceSection .donutsContainer {
+  display: flex;
+  gap: 28px;
+  padding-left: 0; /* remove padding-left */
+  padding-right: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  height: 280px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.compPresenceSection .donutsContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Enforce left margin only on first donut */
+.compPresenceSection .donutsContainer > *:first-child {
+  margin-left: 50px;
+}
+
+.metricTiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2.8rem 2.8rem;
+  align-content: start;
+  padding-bottom: 2rem
+}

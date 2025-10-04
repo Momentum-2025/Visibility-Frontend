@@ -1,0 +1,29 @@
+.contextWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  min-height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #31374d;
+  box-sizing: border-box;
+  padding: 32px 24px;
+}
+
+.heading {
+  font-weight: 600;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+
+@media (max-width: 980px) {
+  .contextWrapper {
+    padding: 2rem 1.6rem;
+  }
+  .headerRow {
+    font-size: 1.95rem;
+  }
+ 
+}

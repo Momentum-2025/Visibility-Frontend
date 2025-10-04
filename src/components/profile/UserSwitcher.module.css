@@ -1,0 +1,108 @@
+.navProfile {
+  background: #fff;
+  border-radius: 15px;
+  /* box-shadow: 0 2px 12px rgba(30, 41, 59, 0.07); */
+  padding: 22px 24px 17px 24px;
+  max-width: 220px;
+  margin: 0 auto 18px auto;
+  text-align: center;
+  position: relative;
+  font-family: 'Inter', Arial, sans-serif;
+  border: 1px solid rgb(255, 255, 255)
+}
+
+.profileAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #f6f6f8;
+  color: #000000;
+  font-size: 1.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+  border: 2px solid #ecebf4;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.profileName {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  outline: none;
+  color: #222c3c;
+  font-size: 1.09rem;
+  font-weight: 600;
+  gap: 7px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  padding: 3px 8px 3px 9px;
+  border-radius: 7px;
+  transition: background 0.13s;
+}
+.profileName:active,
+.profileName:focus,
+.profileName:hover {
+  background: #f3f6fa;
+}
+
+.dropdownArrow {
+  font-size: 1.12rem;
+  color: #7a859e;
+  margin-top: 2px;
+}
+
+.profileDropdown {
+  position: absolute;
+  left: 50%;
+  top: 81px;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 11px;
+  box-shadow: 0 5px 24px rgba(30,41,59,0.16);
+  min-width: 180px;
+  padding: 7px 0;
+  z-index: 11;
+  animation: fadeIn 0.23s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px) translateX(-50%); }
+  to   { opacity: 1; transform: translateY(0) translateX(-50%); }
+}
+
+.profileDropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 22px;
+  font-size: 1.03rem;
+  color: #263244;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.14s, color 0.14s;
+}
+
+.profileDropdown button:hover {
+  background: #f4f7fd;
+  color: #2a5cc7;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .navProfile {
+    max-width: 100%;
+    padding: 13px 8px 15px 8px;
+  }
+  .profileDropdown {
+    min-width: 146px;
+    left: 15%;
+    top: 79px;
+    transform: translateX(0);
+  }
+}

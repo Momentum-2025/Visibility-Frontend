@@ -1,0 +1,108 @@
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(30, 41, 59, 0.07);
+  padding: 32px 28px 24px 28px;
+  /* margin: 24px 24px; */
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sectionHeader h2 {
+  font-size: 1.14rem;
+  font-weight: 600;
+  color: #253445;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.success {
+  color: #37ab6c;
+  background: #eafaf1;
+  font-size: 0.98rem;
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 1.5px 12px;
+  margin-left: 10px;
+}
+
+.loading {
+  font-size: 1rem;
+  color: #828ca2;
+  text-align: center;
+  padding: 48px 0;
+}
+
+.gridForm {
+  display: grid;
+  gap: 24px 30px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 8px;
+}
+
+.gridForm label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: #30475c;
+  gap: 9px;
+}
+
+.input {
+  font-size: 1rem;
+  padding: 10px 13px;
+  border: 1px solid #dde2ee;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #22304a;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #99c3f3;
+  background: #fff;
+}
+
+.textAreaLabel {
+  grid-column: 1 / 3;
+}
+
+.gridForm textarea.input {
+  resize: vertical;
+  min-height: 64px;
+  max-height: 140px;
+}
+
+.buttonsRow {
+  grid-column: 1 / 3;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.saveBtn {
+  background: #3866f8;
+  color: #fff;
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.01rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+
+.saveBtn:disabled {
+  background: #b3c6f5;
+  cursor: not-allowed;
+}
