@@ -1,0 +1,164 @@
+.wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  /* background: #ffffff; */
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.heading {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #222336;
+}
+
+.saveBtn {
+  background: #eff3ff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-weight: 500;
+  color: #4567e7;
+  box-shadow: 0 1px 3px rgba(44, 62, 80, 0.07);
+  transition: background 0.2s;
+}
+.saveBtn:hover {
+  background: #dde5fa;
+}
+
+.filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.filterBtn {
+  background: rgba(255, 255, 255, 0.888);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  color: #30344f;
+  /* box-shadow: 0px 2px 7px rgba(44, 62, 80, 0.04); */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.closeX {
+  color: #e04a47;
+  font-size: 1.18rem;
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(44, 62, 80, 0.07);
+  margin-bottom: 24px;
+  padding: 0;
+  min-height: 115px;
+  overflow: hidden;
+}
+
+.statCard {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 28px 30px;
+  background: transparent;
+  min-width: 0;
+  min-height: 20px;/*115px*/
+  /* Remove border and shadow here, apply to parent (statsRow) instead */
+  border-right: 1px solid #eff0f2;
+}
+
+.statCard:last-child {
+  border-right: none;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #81878f;
+  font-weight: 500;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #21253a;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.platforms {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.platformIcon {
+  display: flex;
+  align-items: center;
+  background: #f7faff;
+  border-radius: 5px;
+  padding: 5px;
+  min-width: 30px;
+  min-height: 30px;
+  justify-content: center;
+}
+
+.platformLogo {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.metricTiles
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2.8rem 2.8rem;
+  align-content: start;
+  padding-bottom: 2rem
+}
+
+.dataSection {
+ margin-top: 48px;
+}
+.subHeading {
+ font-size: 1.2rem;
+ font-weight: 600;
+ margin-bottom: 8px;
+}
+.table {
+ width: 100%;
+ border-collapse: collapse;
+ background: #fff;
+ font-size: 0.98rem;
+}
+.table th, .table td {
+ border: 1px solid #f0f0f2;
+ padding: 8px 14px;
+ text-align: left;
+}
+.table th {
+ background: #f7f7fa;
+ font-weight: 700;
+}

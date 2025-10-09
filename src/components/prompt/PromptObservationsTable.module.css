@@ -1,0 +1,125 @@
+.promptTableWrapper {
+  margin: 0;
+  padding: 0;
+  background: #f9fafb;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px 0 #f2f2fe;
+  overflow-x: auto;
+}
+.promptTable {
+  min-width: 1000px;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+}
+.promptTable th,
+.promptTable td {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 1.04rem;
+}
+.promptTable th {
+  color: #9496a1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-bottom: 2px solid #f1f1f7;
+  background: #fafaffa7;
+}
+.tableRow {
+  border-bottom: 1px solid #f4f4fa;
+}
+.promptText {
+  color: #232348;
+  font-size: 1.12rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  max-width: 350px;
+  white-space: pre-line;
+}
+.promptMeta {
+  color: #8aa59d;
+  display: flex;
+  align-items: center;
+  font-size: 0.93rem;
+  gap: 6px;
+}
+.promptCategory {
+  color: #5850ec;
+  font-weight: 500;
+}
+.promptDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 100px;
+  display: inline-block;
+  background: #33b17d;
+  margin-right: 5px;
+}
+.numBold {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.numMed {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.dataLabel {
+  color: #b2b4be;
+  margin-left: 2px;
+  font-size: 0.91rem;
+}
+.presenceBarWrapper {
+  width: 68px;
+  height: 12px;
+  background: #e9f8ef;
+  border-radius: 13px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.presenceBar {
+  height: 100%;
+  background: #35c77b;
+  border-radius: 13px;
+  transition: width 0.3s;
+}
+.presencePercent {
+  font-size: 0.99rem;
+  font-weight: 500;
+  color: #32ab7a;
+}
+.citationTrend {
+  min-height: 24px;
+}
+.citationPercent {
+  color: #d6346f;
+  font-weight: 600;
+  font-size: 0.93rem;
+}
+.chip {
+  display: inline-block;
+  background: #eff3fa;
+  color: #545576;
+  font-size: 0.93rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 3px 9px;
+  margin: 0 5px 4px 0;
+}
+.starBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 7px 0 0;
+  cursor: pointer;
+  outline: none;
+}
+.starIcon,
+.starIconFilled {
+  color: #bebebe;
+  font-size: 1.27rem;
+  vertical-align: middle;
+}
+.starIconFilled {
+  color: #d69c00;
+}

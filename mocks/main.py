@@ -49,6 +49,7 @@ class BrandInfo(BaseModel):
     websites: str = ""
 
 class Persona(BaseModel):
+    id:int
     name: str
     description: str = ""
     countries: str = ""
@@ -59,6 +60,7 @@ class Competitor(BaseModel):
     websites: str = ""
 
 class Topic(BaseModel):
+    id:int
     name: str
 
 class ContextData(BaseModel):
@@ -502,3 +504,175 @@ async def get_citations(projectId: str, authorization: Optional[str] = Header(No
 @app.get("/test")
 async def get_all_test():
     return projects
+
+
+class PromptPersona(BaseModel):
+    id: int
+    name: str
+    geo_country: Optional[str]
+    geo_state: Optional[str]
+    geo_city: Optional[str]
+    geo_latitude: Optional[float]
+    geo_longitude: Optional[float]
+    location: Optional[str]
+
+class PromptTopic(BaseModel):
+    id: int
+    name: str
+
+class SeedPrompt(BaseModel):
+    id: int
+    status: str
+    text: str
+    favorite: bool
+    branded: bool
+    persona: Persona
+    category: str
+    topics: List[Topic]
+    tags: List[str]
+    last_updated: str
+    created_at: str
+    platforms: List[str]
+
+class Observation(BaseModel):
+    id: int
+    seed_prompt: SeedPrompt
+    platform: str
+    observation_count: int
+    created_at: str
+    updated_at: str
+
+class ObservationsResponse(BaseModel):
+    total: int
+    offset: int
+    limit: Optional[int] 
+    observations: List[Observation]
+
+@app.get("/api/prompt-observations", response_model=ObservationsResponse)
+async def get_observations(
+    offset: int = 0,
+    limit: Optional[int] = None,
+    authorization: Optional[str] = Header(None),
+):
+    user_id = get_userid_from_auth_header(authorization)
+
+    # Demo seeds, personas, platforms
+    prompt_texts = [
+        "What are the best no-code platforms for integrating data from multiple sources?",
+        "How do you ensure data quality in modern ETL pipelines?",
+        "Top strategies for multi-cloud data warehousing.",
+        "Key considerations for GDPR compliance in data processing.",
+        "Biggest trends in AI-powered analytics for 2025."
+    ]
+    persona_names = [
+        "Data-Driven Business Analyst",
+        "Cloud Architect",
+        "Compliance Officer",
+        "AI Product Manager",
+        "BI Analyst"
+    ]
+    categories = [
+        "Option Generation", "QA", "Strategy", "Compliance", "Forecasting"
+    ]
+    platform_list = ["chatgpt", "meta", "perplexity", "claude", "google-ai"]
+
+    # Helper function to create a persona
+    def make_persona(pid, name):
+        return Persona(id=pid, name=name, description=f"Persona: {name}")
+
+    # Helper function to create topics
+    def make_topics(idx):
+        return [
+            Topic(id=10000 + idx, name="General Data"),
+            Topic(id=10001 + idx, name="Best Practices"),
+            Topic(id=10002 + idx, name="Trends 2025"),
+        ]
+
+    # Helper function to create seed prompt
+    def make_seed_prompt(prompt_id, idx):
+        return SeedPrompt(
+            id=prompt_id,
+            status="active",
+            text=prompt_texts[idx % len(prompt_texts)],
+            favorite=bool(idx % 2),
+            branded=False,
+            persona=make_persona(6500 + idx, persona_names[idx % len(persona_names)]),
+            category=categories[idx % len(categories)],
+            topics=make_topics(idx),
+            tags=["tag1", "tag2"],
+            last_updated="2025-07-31T13:23:51.585608Z",
+            created_at="2025-07-30T22:13:51.585608Z",
+            platforms=platform_list
+        )
+
+    # Generate 10 mock observations: each seed prompt for two different platforms (total 10)
+    observations = []
+    for i in range(5):  # Five seed prompts
+        seed_prompt = make_seed_prompt(131000 + i, i)
+        for j in range(2):  # Two platform observations per prompt
+            obs = Observation(
+                id=513800 + (i * 2 + j),
+                seed_prompt=seed_prompt,
+                platform=platform_list[(i + j) % len(platform_list)],
+                observation_count=10 + i * 5 + j,
+                created_at="2025-07-31T13:23:51.585608Z",
+                updated_at="2025-07-31T13:23:51.585608Z"
+            )
+            observations.append(obs)
+
+    # Support offset/limit pagination if needed
+    total = len(observations)
+    sliced = observations[offset: (offset + limit) if limit else None]
+
+    return ObservationsResponse(
+        total=total,
+        offset=offset,
+        limit=limit,
+        observations=sliced
+    )
+
+from typing import Dict
+
+class PerfCompetitor(BaseModel):
+    name: str
+    count: int
+
+class PerfCompetitorGroup(BaseModel):
+    competitors: List[PerfCompetitor]
+    observation_count: int
+
+# Dict[str, PerfCompetitorGroup] as response type
+PerfCompetitorPerfResponse = Dict[str, PerfCompetitorGroup]
+
+@app.get("/api/{projectId}/prompt-competitor-perf", response_model=PerfCompetitorPerfResponse)
+async def get_prompt_competitor_perf(
+    projectId: str,
+    authorization: Optional[str] = Header(None)
+):
+    user_id = get_userid_from_auth_header(authorization)
+    check_project_permission(projectId, user_id)
+
+    # Example mock data, can expand or generate as needed
+    result = {
+        "513800": {
+            "competitors": [
+                {"name": "Fivetran", "count": 26},
+                {"name": "Matillion", "count": 24},
+                {"name": "Airbyte", "count": 16},
+                {"name": "Talend", "count": 8},
+                {"name": "Stitch", "count": 2}
+            ],
+            "observation_count": 27
+        },
+        "513803": {
+            "competitors": [
+                {"name": "Talend", "count": 27},
+                {"name": "Fivetran", "count": 27},
+                {"name": "Matillion", "count": 27},
+                {"name": "Airbyte", "count": 14},
+                {"name": "Stitch", "count": 12}
+            ],
+            "observation_count": 27
+        }
+    }
+    return result

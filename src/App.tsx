@@ -7,6 +7,7 @@ import { AuthProvider } from './hooks/useAuth'
 import RequireAuth from './components/RequireAuth'
 import ContextPage from './pages/ContextPage'
 import { ProjectProvider } from './contexts/ProjectContext'
+import PromptsPage from './pages/PromptsPage'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route element={<RequireAuth />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/context" element={<ContextPage />} />
+              <Route path="/prompts" element={<PromptsPage />} />
             </Route>
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />

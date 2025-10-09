@@ -17,7 +17,7 @@ export default function BrandInfoSection() {
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(true)
-  const { currentProjectId, setCurrentProjectId } = useProject()
+  const { currentProjectId, setCurrentProjectId, projects } = useProject()
 
   useEffect(() => {
     // Load brand info from local storage or API
@@ -42,7 +42,12 @@ export default function BrandInfoSection() {
     e.preventDefault()
     setSaving(true)
     await saveBrandInfo(brand).then((data) => {
-      if (data) setCurrentProjectId(data.brandInfo.id)
+      if (data)
+         setCurrentProjectId(data.brandInfo.id)
+        projects.push(({
+          id: data.brandInfo.id ?? '',
+          name: data.brandInfo.name,
+        }))
     })
     setSaving(false)
     setSuccess(true)
