@@ -4,7 +4,7 @@ import { AxiosHeaders } from 'axios'
 // Use a base API URL for all context/dash endpoints
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://visbility-api-env.eba-mhv4cxvg.ap-south-1.elasticbeanstalk.com',
 })
 
 // Helper to get auth token
@@ -34,14 +34,14 @@ api.interceptors.request.use(config => {
 
 export default api;
 
-export interface BrandInfo {
-  id?: string
-  name: string
-  alternativeNames: string
-  description: string
-  country: string
-  websites: string
-}
+// export interface BrandInfo {
+//   id?: string
+//   name: string
+//   alternativeNames: string
+//   description: string
+//   country: string
+//   websites: string
+// }
 
 export interface Persona {
   name: string
@@ -67,6 +67,33 @@ export interface ContextData {
   topics: Topic[]
 }
 
+//new
+export interface CompetitorInfo {
+  id: string;
+  name: string;
+  alternativeNames: string[] | null;
+  websites: string[];
+}
+
+export interface BrandInfo {
+  id: string;
+  name: string;
+  description: string;
+  website: string;
+  locationId: number;
+  createdBy: string;
+  createdOn: string;
+  updatedBy: string;
+  updatedOn: string;
+  competitors: CompetitorInfo[];
+  alternativeNames: string[];
+  alternativeWebsite: string[];
+  personas: Persona[];
+  keyTopics: Topic[];
+}
+
+//new
+
 // Create brand and context all in one call, returns projectId in response
 export async function createContextWithBrand(data: ContextData) {
   const response = await api.post('/context/brand', data.brandInfo)
@@ -76,6 +103,18 @@ export async function createContextWithBrand(data: ContextData) {
 export async function saveBrandInfo(brandInfo: BrandInfo) {
   const response = await api.post(`/context/brand`, brandInfo)
   return response.data
+}
+  
+export async function loadAllContextInfo(userId: string): Promise<BrandInfo[]> {
+  try {
+    const response = await api.get<BrandInfo[]>(`/api/Context/byuser/${userId}`)
+    return response.data
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return []
+    }
+    throw error
+  }
 }
 
 export async function loadBrandInfo(projectId: string): Promise<BrandInfo | null> {
@@ -90,9 +129,9 @@ export async function loadBrandInfo(projectId: string): Promise<BrandInfo | null
   }
 }
 
-export async function loadUserProjects(): Promise<BrandInfo[] | []> {
+export async function loadUserProjects(userId:string): Promise<BrandInfo[] | []> {
   try {
-    const response = await api.get<BrandInfo[]>(`/context/brands`)
+    const response = await api.get<BrandInfo[]>(`api/context/byuser/${userId}`)
     return response.data
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -112,7 +151,7 @@ export async function loadPersonas(projectId: string): Promise<Persona[]> {
   return response.data
 }
 
-export async function saveCompetitors(projectId: string, competitors: Competitor[]) {
+export async function saveCompetitors(projectId: string, competitors: CompetitorInfo[]) {
   const response = await api.post(`/context/competitors/${projectId}`, competitors)
   return response.data
 }

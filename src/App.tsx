@@ -8,6 +8,8 @@ import RequireAuth from './components/RequireAuth'
 import ContextPage from './pages/ContextPage'
 import { ProjectProvider } from './contexts/ProjectContext'
 import PromptsPage from './pages/PromptsPage'
+import OtpVerification from './pages/OtpVerificationPage'
+import AuthFlow from './pages/AuthFlow'
 
 function App() {
   return (
@@ -20,8 +22,10 @@ function App() {
               <Route path="/context" element={<ContextPage />} />
               <Route path="/prompts" element={<PromptsPage />} />
             </Route>
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/otp-verification" element={<OtpVerification />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/" element={<AuthFlow />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // PromptDataService.ts
 
-import api, { type Topic } from './contextService'
+import type { PromptFilters } from '../hooks/useFilters'
+import api from './contextService'
+import type { DateRange } from './dashboardService'
+import type {
+  PromptDisplayData,
+  PromptInfo,
+  TagPresenceSummaryList,
+  TagAnalysisResponse,
+} from './PromptDataModels'
 
 export interface PromptTopic {
   id: number
@@ -64,50 +73,111 @@ export type CompetitorMapResponse = {
   [observationId: string]: ObservationCompetitorGroup
 }
 
-export async function fetchPromptObservations(
-//   offset = 0,
-//   limit: number | null = null,
-): Promise<ObservationsResponse> {
-//   const params: Record<string, unknown> = { offset }
-//   if (limit !== null) params.limit = limit
+export async function fetchPromptPageData(
+  projectId: string,
+  filters: PromptFilters,
+): Promise<PromptDisplayData> {
+  const result: Partial<PromptDisplayData> = {}
 
-  const response = await api.get<ObservationsResponse>('/prompt-observations')
+  if (filters.tags.length != 0) {
+    result.isTagSpecificData = true
+    result.tagSpecificData = await fetchTagSpecificPromptStats(
+      projectId,
+      filters.tags[0],
+      {
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+      },
+    )
+  } else if (filters.groupBy == 'prompt') {
+    result.seedPromptData = await fetchPromptObservations(projectId)
+  } else {
+    result.isTagWiseData = true
+    result.tagWiseData = await fetchTagWisePromptStats(projectId, {
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+    })
+    console.log('got data')
+    console.log(result.tagWiseData)
+  }
+
+  return result as PromptDisplayData
+}
+
+export async function fetchPromptObservations(
+  projectId: string,
+): Promise<PromptInfo[]> {
+  const response = await api.get<PromptInfo[]>(`/api/prompt/${projectId}`)
+  return response.data
+}
+
+export async function fetchTagWisePromptStats(
+  projectId: string,
+  dateRange?: DateRange,
+): Promise<TagPresenceSummaryList> {
+  const params: Record<string, unknown> = {}
+  params['contextId'] = projectId
+  if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+  if (dateRange?.endDate) params['endDate'] = dateRange.endDate
+
+  const response = await api.get<TagPresenceSummaryList>(
+    `/api/PresenceSummary/tags`,
+    {
+      params,
+    },
+  )
+  return response.data
+}
+
+export async function fetchTagSpecificPromptStats(
+  projectId: string,
+  tag: string,
+  dateRange?: DateRange,
+): Promise<TagAnalysisResponse | undefined> {
+  const params: Record<string, unknown> = {}
+  if (tag == null) {
+    return undefined
+  }
+
+  params['contextId'] = projectId
+  params['tag'] = tag
+  if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+  if (dateRange?.endDate) params['endDate'] = dateRange.endDate
+
+  const response = await api.get<TagAnalysisResponse>(
+    `/api/PresenceSummary/prompt-analysis`,
+    {
+      params,
+    },
+  )
   return response.data
 }
 
 //helper functions
 interface PrompTableRow {
-  id:number,
-  promptText:string,
-  topics:Topic[],
-  platforms:string[],
-  totalResponseCount:number,
-  competitorCount:CompetitorMapResponse
+  id: string
+  promptText: string
+  tag: string
+  platforms: string[] | []
+  totalResponseCount: number | 0
+  competitorCount: CompetitorMapResponse | null
 }
 
-export function mapObservationsToTableRows(observations: Observation[]): PrompTableRow[] {
-  const rowMap = new Map<number, PrompTableRow>()
+export function mapObservationsToTableRows(
+  prompts: PromptInfo[],
+): PrompTableRow[] {
+  const rowMap = new Map<string, PrompTableRow>()
 
-  for (const obs of observations) {
-    const key = obs.seed_prompt.id
-    if (!rowMap.has(key)) {
-      rowMap.set(key, {
-        id: key,
-        promptText: obs.seed_prompt.text,
-        topics: obs.seed_prompt.topics,
-        platforms: [obs.platform],
-        totalResponseCount: obs.observation_count,
-        competitorCount: {} // Fill later as required
-      })
-    } else {
-      const row = rowMap.get(key)!
-      // Add unique platforms
-      if (!row.platforms.includes(obs.platform)) {
-        row.platforms.push(obs.platform)
-      }
-      // Sum response counts
-      row.totalResponseCount += obs.observation_count
-    }
+  for (const prompt of prompts) {
+    const key = prompt.id
+    rowMap.set(key, {
+      id: key,
+      promptText: prompt.prompt,
+      tag: prompt.tag,
+      platforms: [], // below might not be used now
+      totalResponseCount: 0,
+      competitorCount: null,
+    })
   }
 
   return Array.from(rowMap.values())

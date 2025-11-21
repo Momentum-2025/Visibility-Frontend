@@ -1,37 +1,35 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react'
 import AppLayout from '../layouts/AppLayout'
 import styles from './DashboardPage.module.css'
 import {
-  fetchDashboardOverview,
-  fetchCompetitorPresence,
+  // fetchDashboardOverview,
+  fetchOverallPresence,
   fetchCitations,
-  type PresenceEntry,
   mapPresenceToChartEntries,
-  fetchPresence,
   type PositionEntry,
   fetchPosition,
   mapPositionToChartEntries,
+  type PresenceApiResponse,
+  convertDayWiseToChartData,
 } from '../services/dashboardService'
 
 import {
   mapCitationToChartEntries,
   type CitationEntry,
-  type CompetitorPresence,
-  type DashboardOverview,
+  // type DashboardOverview,
 } from '../services/dashboardService'
 import { useProject } from '../contexts/ProjectContext'
-import MultiDonut from '../components/diagram/MultiDonut'
 import { PieCard } from '../components/diagram/PieCard'
+import { GenericLineChart } from '../components/diagram/GenericLineChart'
 
-const DASHBOARD_DATE_RANGE = { startDate: '2025-07-01', endDate: '2025-09-23' }
+const DASHBOARD_DATE_RANGE = { startDate: '2025-10-01', endDate: '2025-12-01' }
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<DashboardOverview | null>(null)
-  const [competitivePresence, setCompetitivePresence] = useState<
-    CompetitorPresence[]
-  >([])
+  // const [stats, setStats] = useState<DashboardOverview | null>(null)
+  const [overallPresence, setOverallPresence] =
+    useState<PresenceApiResponse | null>(null)
   const [citationsArray, setCitationArray] = useState<CitationEntry[]>([])
-  const [presenceData, setPresenceData] = useState<PresenceEntry[]>([])
   const [positionData, setPositionData] = useState<PositionEntry[]>([])
 
   const [loading, setLoading] = useState(true)
@@ -44,22 +42,30 @@ export default function DashboardPage() {
     setLoading(true)
     setError(null)
     Promise.all([
-      fetchDashboardOverview(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchCompetitorPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
+      // fetchDashboardOverview(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
+      fetchOverallPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
       fetchCitations(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchPosition(currentProjectId ?? '', DASHBOARD_DATE_RANGE)
+      // fetchPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
+      fetchPosition(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
     ])
-      .then(([overview, competitorPresence, citations, brandPresence, positionData]) => {
-        if (!cancelled) {
-          setStats(overview)
-          setCompetitivePresence(competitorPresence || [])
-          setCitationArray(citations || [])
-          setPresenceData(brandPresence || [])
-          setPositionData(positionData || [])
-          if (donutsRef.current) donutsRef.current.scrollLeft = 0
-        }
-      })
+      .then(
+        ([
+          // overview,
+          competitorPresence,
+          citations,
+          // brandPresence,
+          positionData,
+        ]) => {
+          if (!cancelled) {
+            // setStats(overview)
+            setOverallPresence(competitorPresence)
+            setCitationArray(citations || [])
+            // setPresenceData(brandPresence || [])
+            setPositionData(positionData || [])
+            if (donutsRef.current) donutsRef.current.scrollLeft = 0
+          }
+        },
+      )
       .catch((err) => {
         setError('Could not load dashboard data. Try again later.')
         console.log(err)
@@ -74,10 +80,10 @@ export default function DashboardPage() {
 
   // const colors = ['#22c55e', '#ef4444', '#3b82f6', '#f59e0b', '#10b981']
 
-  function getRandomColor(isCompetitor: boolean): string {
-    if (isCompetitor) return '#947f44ff'
-    return '#438a5dff'
-  }
+  // function getRandomColor(isCompetitor: boolean): string {
+  //   if (isCompetitor) return '#947f44ff'
+  //   return '#438a5dff'
+  // }
 
   return (
     <AppLayout>
@@ -96,48 +102,47 @@ export default function DashboardPage() {
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Prompts</div>
-            <div className={styles.statValue}>{stats?.prompts ?? '--'}</div>
+            <div className={styles.statValue}>{overallPresence?.ownPresenceCount ?? '--'}</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Responses</div>
-            <div className={styles.statValue}>{stats?.responses ?? '--'}</div>
+            <div className={styles.statValue}>{overallPresence?.totalResponses ?? '--'}</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Platforms</div>
             <div className={styles.platforms}>
-              {stats?.platforms?.map((p, i) => (
-                <span key={i} className={styles.platformIcon}>
-                  {p.logoUrl ? (
+              {/* {platforms?.map((p, i) => ( */}
+                <span key={0} className={styles.platformIcon}>
+                  {/* {'logoUrl' ? ( */}
                     <img
-                      src={p.logoUrl}
-                      alt={p.id}
+                      src={'logoUrl'}
+                      alt={'0'}
                       className={styles.platformLogo}
                     />
-                  ) : (
-                    p.id
-                  )}
+                  {/* ) : ( */}
+                    {/* p.id */}
+                  {/* )} */}
                 </span>
-              ))}
+              {/* ))} */}
             </div>
           </div>
         </div>
 
         <section className={styles.compPresenceSection}>
-          <div className={styles.donutsContainer}>
-            {/* Show competitors, map as needed */}
-            {competitivePresence.map((competitor) => (
-              <MultiDonut
-                key={competitor.Key}
-                title={competitor.Key}
-                color={getRandomColor(competitor.IsCompetitor)} // a helper function to assign colors
-                values={[
-                  competitor.presence7Days,
-                  competitor.presence4Weeks,
-                  competitor.presence12Weeks,
-                ]}
-              />
-            ))}
-          </div>
+          <GenericLineChart
+              title="Competitive Presence (% of total)"
+              data={convertDayWiseToChartData(overallPresence?.dayWisePresence || [])}
+              xKey="date"
+              xFormatter={(d: any) => d}
+              yFormatter={(v: any) => `${v}%`}
+              series={[
+                { dataKey: 'Airbyte', label: 'Airbyte', color: '#0ea5e9' },
+                { dataKey: 'Fivetran', label: 'Fivetran', color: '#1d4ed8' },
+                { dataKey: 'Matillion', label: 'Matillion', color: '#22c55e' },
+                { dataKey: 'Stitch', label: 'Stitch', color: '#a855f7' },
+                { dataKey: 'Talend', label: 'Talend', color: '#fb7185' },
+              ]}
+            />
         </section>
 
         <section className={styles.metricTiles}>
@@ -156,7 +161,7 @@ export default function DashboardPage() {
           />
 
           <PieCard
-            data={mapPresenceToChartEntries(presenceData)} // your array of CitationEntry
+            data={mapPresenceToChartEntries(overallPresence?.dayWisePresence || [])} // your array of CitationEntry
             keys={['present_percentage', 'not_present']}
             labels={['Present', 'Not Present']}
             colors={['#22c55e', '#ef4444', '#3b82f6']}
@@ -176,7 +181,7 @@ export default function DashboardPage() {
           />
 
           <PieCard
-            data={mapPresenceToChartEntries(presenceData)} // your array of CitationEntry
+            data={mapPresenceToChartEntries(overallPresence?.dayWisePresence || [])} // your array of CitationEntry
             keys={['present_percentage', 'not_present']}
             labels={['Present', 'Not Present']}
             colors={['#22c55e', '#ef4444', '#3b82f6']}

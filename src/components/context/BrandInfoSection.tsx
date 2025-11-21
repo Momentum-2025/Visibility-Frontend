@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styles from './BrandInfoSection.module.css'
-import { loadBrandInfo, saveBrandInfo } from '../../services/contextService'
+import { loadAllContextInfo, saveBrandInfo } from '../../services/contextService'
 import type { BrandInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
 const emptyBrand: BrandInfo = {
   name: '',
-  alternativeNames: '',
   description: '',
-  country: '',
-  websites: '',
+  id: '',
+  website: '',
+  locationId: 0,
+  createdBy: '',
+  createdOn: '',
+  updatedBy: '',
+  updatedOn: '',
+  competitors: [],
+  alternativeNames: [],
+  alternativeWebsite: [],
+  personas: [],
+  keyTopics: []
 }
 
 export default function BrandInfoSection() {
@@ -22,8 +31,8 @@ export default function BrandInfoSection() {
   useEffect(() => {
     // Load brand info from local storage or API
     if (currentProjectId)
-      loadBrandInfo(currentProjectId).then((data) => {
-        if (data) setBrand(data)
+      loadAllContextInfo('system').then((data) => {
+        if (data) setBrand(data[0])
       })
     setLoading(false) // Always set loading false, even if no data
   }, [currentProjectId])
@@ -65,8 +74,8 @@ export default function BrandInfoSection() {
     !brand.name &&
     !brand.alternativeNames &&
     !brand.description &&
-    !brand.country &&
-    !brand.websites
+    !brand.locationId &&
+    !brand.website
   return (
     <section className={styles.card}>
       <div className={styles.sectionHeader}>
@@ -117,7 +126,7 @@ export default function BrandInfoSection() {
           <span>Country</span>
           <input
             name="country"
-            value={brand.country}
+            value={brand.locationId}
             onChange={onFieldChange}
             className={styles.input}
             placeholder="Brand's primary country"
@@ -127,7 +136,7 @@ export default function BrandInfoSection() {
           <span>Alternative Websites</span>
           <input
             name="websites"
-            value={brand.websites}
+            value={brand.website}
             onChange={onFieldChange}
             className={styles.input}
             placeholder="Comma-separated URLs"

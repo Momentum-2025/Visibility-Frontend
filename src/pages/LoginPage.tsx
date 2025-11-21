@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useNavigate, Link } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
 import type { CredentialResponse } from '@react-oauth/google'
-import styles from './AuthPage.module.css'  // refined and shared style
+import styles from './AuthPage.module.css' // refined and shared style
 
 const LoginPage: React.FC = () => {
   const { login, googleLogin } = useAuth()
@@ -21,7 +21,12 @@ const LoginPage: React.FC = () => {
     setError('')
     try {
       await login(email, password)
-      navigate('/dashboard')
+      navigate('/verify-otp', { 
+          state: { 
+            email,
+            timestamp: Date.now() // optional: for OTP expiry
+          } 
+        });
     } catch (err: any) {
       setError(err.message || 'Login failed')
     } finally {
@@ -29,7 +34,9 @@ const LoginPage: React.FC = () => {
     }
   }
 
-  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+  const handleGoogleLoginSuccess = async (
+    credentialResponse: CredentialResponse,
+  ) => {
     if (credentialResponse.credential) {
       try {
         await googleLogin(credentialResponse.credential)
@@ -47,7 +54,11 @@ const LoginPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.tile}>
-        <h1 className={styles.title}>Welcome back</h1>
+        <div className={styles.titleBlock}>
+          <h1 className={styles.title}>Sign in to Visibility AI</h1>
+          <h5 className={styles.subTitle}>Welcome back! Sign in to continue</h5>
+        </div>
+
         <div className={styles.socialRow}>
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
@@ -68,7 +79,7 @@ const LoginPage: React.FC = () => {
               className={styles.input}
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
               placeholder="email@company.com"
@@ -102,18 +113,14 @@ const LoginPage: React.FC = () => {
 
           {error && <div className={styles.error}>{error}</div>}
 
-          <button
-            className={styles.submitBtn}
-            type="submit"
-            disabled={loading}
-          >
+          <button className={styles.submitBtn} type="submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
-        <div className={styles.bottomRow}>
+        {/* <div className={styles.bottomRow}>
           Don't have an account yet?
           <Link to="/signup">Sign up for free &rarr;</Link>
-        </div>
+        </div> */}
       </div>
     </div>
   )

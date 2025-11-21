@@ -162,3 +162,75 @@
  background: #f7f7fa;
  font-weight: 700;
 }
+
+/* Add these styles to PromptsPage.module.css */
+
+.clearFiltersBtn {
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.clearFiltersBtn:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}
+
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterBtn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.closeX {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.closeX:hover {
+  background-color: #d1d5db;
+  color: #111827;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.metricTiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2.8rem 2.8rem;
+  align-content: start;
+  padding-bottom: 2rem
+}

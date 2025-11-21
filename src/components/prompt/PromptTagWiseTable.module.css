@@ -1,0 +1,150 @@
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  /* padding: 1rem; */
+}
+
+/* Table Wrapper */
+.tableWrapper {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+/* Table Header */
+.tableHeader {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.headerCell {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Table Row */
+.tableRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background-color: #f9fafb;
+}
+
+.rowExpanded {
+  background-color: #f0f9ff;
+  border-bottom: none;
+}
+
+/* Cell */
+.cell {
+  padding: 1.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Tags Column */
+.tagText {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Data Column */
+.dataColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dataItem {
+  font-size: 0.875rem;
+}
+
+.dataValue {
+  font-weight: 600;
+  color: #111827;
+}
+
+.dataLabel {
+  color: #6b7280;
+  margin-left: 0.25rem;
+}
+
+/* Metric Column (Presence & Citations) */
+.metricColumn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.chartContainer {
+  flex: 1;
+}
+
+.chart {
+  overflow: visible;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.metricStats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.metricValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.metricChange {
+  font-size: 0.75rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Competitors Column */
+.competitorsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.competitorItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.competitorName {
+  color: #374151;
+}
+
+.competitorPercentage {
+  color: #6b7280;
+}
+
+.competitorMore {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}

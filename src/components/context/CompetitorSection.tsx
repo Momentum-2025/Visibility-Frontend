@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import styles from './CompetitorSection.module.css'
-import { loadCompetitors, saveCompetitors } from '../../services/contextService'
-import type { Competitor } from '../../services/contextService'
+import {
+  loadAllContextInfo,
+  saveCompetitors,
+} from '../../services/contextService'
+import type {  CompetitorInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
-const emptyCompetitor: Competitor = {
+const emptyCompetitor: CompetitorInfo = {
   name: '',
-  alternativeNames: '',
-  websites: '',
+  id: '',
+  alternativeNames: null,
+  websites: []
 }
 
 export default function CompetitorSection() {
-  const [competitors, setCompetitors] = useState<Competitor[]>([])
-  const [form, setForm] = useState<Competitor>(emptyCompetitor)
+  const [competitors, setCompetitors] = useState<CompetitorInfo[]>([])
+  const [form, setForm] = useState<CompetitorInfo>(emptyCompetitor)
   const [showForm, setShowForm] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -21,8 +25,8 @@ export default function CompetitorSection() {
 
   useEffect(() => {
     if (currentProjectId)
-      loadCompetitors(currentProjectId ?? '').then((data) => {
-        setCompetitors(data)
+      loadAllContextInfo('system').then((data) => {
+        setCompetitors(data[0].competitors)
       })
     setLoading(false)
   }, [currentProjectId])
@@ -79,7 +83,7 @@ export default function CompetitorSection() {
           />
           <input
             name="alternativeNames"
-            value={form.alternativeNames}
+            value={form.alternativeNames?.join(',')}
             onChange={handleField}
             className={styles.input}
             placeholder="Alternative names"

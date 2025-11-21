@@ -1,6 +1,55 @@
 import axios from 'axios'
 import api from './contextService' // your preconfigured axios instance
+//new
+export interface CompetitorDetail {
+  presenceCount: number;
+  denominatorCount: number;
+  presencePercentage: number;
+}
 
+export interface DayWisePresence {
+  date: string; // ISO string from API
+  competitorPresencePercentages: Record<string, number>;
+  ownCompanyPresencePercentage: number;
+}
+
+export interface PresenceApiResponse {
+  totalResponses: number;
+  ownPresenceCount: number;
+  ownPresencePercentage: number;
+  competitorDetails: Record<string, CompetitorDetail>;
+  dayWisePresence: DayWisePresence[];
+}
+
+export interface ChartPoint {
+  date: string;
+  [key: string]: number | string; // for dynamic competitor keys + "own"
+}
+
+/**
+ * Converts DayWisePresence[] to a format consumable by GenericLineChart.
+ *
+ * Example output:
+ * [
+ *   { date: "2025-10-14", Airbyte: 36.53, Fivetran: 67.66, own: 22.1 },
+ *   { date: "2025-10-15", Airbyte: 38.12, Fivetran: 65.77, own: 21.9 },
+ * ]
+ */
+export function convertDayWiseToChartData(
+  input: DayWisePresence[]
+): ChartPoint[] {
+  return input.map((item) => {
+    const competitors = item.competitorPresencePercentages;
+
+    return {
+      date: item.date,
+      ...competitors,
+      own: item.ownCompanyPresencePercentage,
+    };
+  });
+}
+
+//new
 export interface Platform {
   id: string
   logoUrl: string
@@ -48,7 +97,7 @@ export interface CitationEntry {
   third_party_percentage: number
 }
 
-type ChartEntry = {
+export type ChartEntry = {
   period: string
   [key: string]: number | string
 }
@@ -67,14 +116,14 @@ export function mapCitationToChartEntries(
 }
 
 export function mapPresenceToChartEntries(
-  presenceData: PresenceEntry[],
+  presenceData: DayWisePresence[],
 ): ChartEntry[] {
   return presenceData.map((presence) => ({
-    period: presence.period,
-    total_responses: presence.total_responses,
-    present_percentage: presence.present_percentage,
-    not_present: 100 - presence.present_percentage,
-    present_count: presence.present_count,
+    period: presence.date,
+    total_responses: 0,
+    present_percentage: presence.ownCompanyPresencePercentage,
+    not_present: 100 - presence.ownCompanyPresencePercentage,
+    present_count: 0,
     // Add any additional fields you want to expose for charts
   }))
 }
@@ -105,7 +154,7 @@ function logApiError(apiName: string, error: unknown) {
   }
 }
 
-interface DateRange {
+export interface DateRange {
   startDate?: string
   endDate?: string
 }
@@ -127,8 +176,8 @@ export async function fetchDashboardOverview(
 ): Promise<DashboardOverview | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange?.startDate) params['start-date'] = dateRange.startDate
-    if (dateRange?.endDate) params['end-date'] = dateRange.endDate
+    if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+    if (dateRange?.endDate) params['endDate'] = dateRange.endDate
 
     const response = await api.get(`/dashboard-overview/${projectId}`, {
       params,
@@ -141,16 +190,17 @@ export async function fetchDashboardOverview(
   }
 }
 
-export async function fetchCompetitorPresence(
+export async function fetchOverallPresence(
   projectId: string,
   dateRange: DateRange,
-): Promise<CompetitorPresence[] | null> {
+): Promise<PresenceApiResponse | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange.startDate) params['start-date'] = dateRange.startDate
-    if (dateRange.endDate) params['end-date'] = dateRange.endDate
+    if (dateRange.startDate) params['startDate'] = dateRange.startDate
+    if (dateRange.endDate) params['endDate'] = dateRange.endDate
+    params['contextId'] = projectId
 
-    const response = await api.get(`/competitor-presence/${projectId}`, {
+    const response = await api.get(`/api/PresenceSummary/overall`, {
       params,
       headers: getAuthHeaders(),
     })
@@ -167,8 +217,8 @@ export async function fetchPosition(
 ): Promise<PositionEntry[] | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange?.startDate) params['start-date'] = dateRange.startDate
-    if (dateRange?.endDate) params['end-date'] = dateRange.endDate
+    if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+    if (dateRange?.endDate) params['endDate'] = dateRange.endDate
 
     const response = await api.get(`/position/${projectId}`, {
       params,
@@ -187,8 +237,8 @@ export async function fetchPresence(
 ): Promise<PresenceEntry[] | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange?.startDate) params['start-date'] = dateRange.startDate
-    if (dateRange?.endDate) params['end-date'] = dateRange.endDate
+    if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+    if (dateRange?.endDate) params['endDate'] = dateRange.endDate
 
     const response = await api.get(`/presence/${projectId}`, {
       params,
@@ -207,8 +257,8 @@ export async function fetchCitations(
 ): Promise<CitationEntry[] | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange?.startDate) params['start-date'] = dateRange.startDate
-    if (dateRange?.endDate) params['end-date'] = dateRange.endDate
+    if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+    if (dateRange?.endDate) params['endDate'] = dateRange.endDate
 
     const response = await api.get(`/citations/${projectId}`, {
       params,

@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 // src/hooks/useAuth.ts
 import { useState, useEffect, createContext, useContext } from 'react'
 import type { ReactNode } from 'react'
-import { handleLogin, handleSignup } from '../services/authService'
+import {
+  handleEmailLogin,
+  handleEmailLoginOtpVerification,
+  handleLogin,
+  handleSignup,
+} from '../services/authService'
 import { loadUserProjects } from '../services/contextService'
 import { useProject } from '../contexts/ProjectContext'
 
@@ -14,6 +20,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null
+  emailLogin: (email: string, otp?: string) => Promise<void>
   login: (
     email: string,
     password?: string,
@@ -35,20 +42,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) setUser(JSON.parse(storedUser))
+    // const storedUser = localStorage.getItem('user')
+    // if (storedUser) setUser(JSON.parse(storedUser))
     setLoading(false)
   }, [])
   const { setCurrentProjectId, setProjects } = useProject()
 
-  async function login(email: string, password?: string, googleToken?: string) {
-    // TODO: call authService.login and update user state
-    const payload = { email, password, googleToken }
-    const result = await handleLogin(payload)
-    localStorage.setItem('token', JSON.stringify(result.token))
-    localStorage.setItem('user', JSON.stringify(result.user))
+  async function emailLogin(email: string, otp?: string) {
+    let result
+    if (otp) {
+      result = await handleEmailLoginOtpVerification(email, otp)
+    } else {
+      result = await handleEmailLogin(email)
+      return
+    }
+
+    localStorage.setItem('token', JSON.stringify(result.data.token)) // use result.token
+    localStorage.setItem('user', JSON.stringify(result.data?.user ?? { email: email, fullName:'system'}))
     // Save user/token to localStorage if needed
-    const userProjects = await loadUserProjects() // implement this call
+    const userProjects = await loadUserProjects('system') // implement this call
 
     if (userProjects.length > 0) {
       const lastUsedProjectId = userProjects[0].id // or your preferred logic
@@ -59,6 +71,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })),
       )
       setCurrentProjectId(lastUsedProjectId ?? '') // from useProject hook
+    } else {
+      setCurrentProjectId('68d4012cb35966b61d4cf679')
+    }
+    setUser({ email: email, fullName:'system'})
+  }
+
+  async function login(email: string, password?: string, googleToken?: string) {
+    // TODO: call authService.login and update user state
+    const payload = { email, password, googleToken }
+    const result = await handleLogin(payload)
+
+    localStorage.setItem('token', JSON.stringify(result.token)) // use result.token
+    localStorage.setItem('user', JSON.stringify(result.user))
+    // Save user/token to localStorage if needed
+    const userProjects = await loadUserProjects('system') // implement this call
+
+    if (userProjects.length > 0) {
+      const lastUsedProjectId = userProjects[0].id // or your preferred logic
+      setProjects(
+        userProjects.map((b) => ({
+          id: b.id ?? '',
+          name: b.name,
+        })),
+      )
+      setCurrentProjectId(lastUsedProjectId ?? '') // from useProject hook
+    } else {
+      setCurrentProjectId('68d4012cb35966b61d4cf679')
     }
     setUser(result.user)
   }
@@ -98,7 +137,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, googleLogin }}>
+    <AuthContext.Provider
+      value={{ user, emailLogin, login, signup, logout, googleLogin }}
+    >
       {children}
     </AuthContext.Provider>
   )

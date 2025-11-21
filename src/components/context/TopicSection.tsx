@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './TopicSection.module.css'
-import { loadTopics, saveTopics } from '../../services/contextService'
+import { loadAllContextInfo, saveTopics } from '../../services/contextService'
 import type { Topic } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
@@ -17,8 +17,8 @@ export default function TopicSection() {
 
   useEffect(() => {
     if (currentProjectId)
-      loadTopics(currentProjectId ?? '').then((data) => {
-        setTopics(data)
+      loadAllContextInfo(currentProjectId ?? '').then((data) => {
+        setTopics(data[0].keyTopics)
       })
     setLoading(false)
   }, [currentProjectId])

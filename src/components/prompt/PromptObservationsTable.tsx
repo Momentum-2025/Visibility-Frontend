@@ -2,21 +2,22 @@
 
 import React from 'react'
 import styles from './PromptObservationsTable.module.css'
-import type {Observation} from '../../services/promptDataService'
+import type { PromptInfo } from '../../services/PromptDataModels'
 import {mapObservationsToTableRows} from '../../services/promptDataService'
 // import { TbStar, TbStarFilled } from 'react-icons/tb'
 
 interface Props {
-  data: Observation[] 
+  columns:string[]
+  data: PromptInfo[] 
 }
 
-export const PromptObservationsTable: React.FC<Props> = ({ data }) => {
+export const PromptObservationsTable: React.FC<Props> = ({ data, columns }) => {
   // Helper: mock progress and citation visuals — replace with actual sparkline or progress as needed
-  const renderPresence = (percent: number) => (
-    <div className={styles.presenceBarWrapper}>
-      <div className={styles.presenceBar} style={{ width: `${percent}%` }} />
-    </div>
-  )
+  // const renderPresence = (percent: number) => (
+  //   <div className={styles.presenceBarWrapper}>
+  //     <div className={styles.presenceBar} style={{ width: `${percent}%` }} />
+  //   </div>
+  // )
 
    const rowData = mapObservationsToTableRows(data)
   return (
@@ -25,11 +26,11 @@ export const PromptObservationsTable: React.FC<Props> = ({ data }) => {
         <thead>
           <tr>
             <th></th>
-            <th>Seed Prompt</th>
-            <th>Data</th>
-            <th>Presence</th>
-            <th>Citations</th>
-            <th>Competitors</th>
+            <th>{columns[0]}</th>
+            <th>{columns[1]}</th>
+            <th>{columns[2]}</th>
+            <th>{columns[3]}</th>
+            <th>{columns[4]}</th>
           </tr>
         </thead>
         <tbody>

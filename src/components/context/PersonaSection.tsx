@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './PersonaSection.module.css'
-import { loadPersonas, savePersonas } from '../../services/contextService'
+import { loadAllContextInfo, savePersonas } from '../../services/contextService'
 import type { Persona } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
@@ -17,8 +17,8 @@ export default function PersonaSection() {
 
   useEffect(() => {
     if (currentProjectId)
-      loadPersonas(currentProjectId ?? '').then((data) => {
-        setPersonas(data)
+      loadAllContextInfo('system').then((data) => {
+        setPersonas(data[0].personas)
       })
     setLoading(false)
   }, [currentProjectId])
