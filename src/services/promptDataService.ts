@@ -9,6 +9,7 @@ import type {
   PromptInfo,
   TagPresenceSummaryList,
   TagAnalysisResponse,
+  PromptWiseAnalysis,
 } from './PromptDataModels'
 
 export interface PromptTopic {
@@ -79,7 +80,17 @@ export async function fetchPromptPageData(
 ): Promise<PromptDisplayData> {
   const result: Partial<PromptDisplayData> = {}
 
-  if (filters.tags.length != 0) {
+  if (filters.promptId) {
+    result.isPromptSpecificData = true
+    result.promptSpecificData = await fetchPromptSpecificPromptStats(
+      projectId,
+      filters.promptId,
+      {
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+      },
+    )
+  } else if (filters.tags.length != 0) {
     result.isTagSpecificData = true
     result.tagSpecificData = await fetchTagSpecificPromptStats(
       projectId,
@@ -97,8 +108,6 @@ export async function fetchPromptPageData(
       startDate: filters.startDate,
       endDate: filters.endDate,
     })
-    console.log('got data')
-    console.log(result.tagWiseData)
   }
 
   return result as PromptDisplayData
@@ -146,6 +155,29 @@ export async function fetchTagSpecificPromptStats(
 
   const response = await api.get<TagAnalysisResponse>(
     `/api/PresenceSummary/prompt-analysis`,
+    {
+      params,
+    },
+  )
+  return response.data
+}
+
+export async function fetchPromptSpecificPromptStats(
+  projectId: string,
+  promptId: string,
+  dateRange?: DateRange,
+): Promise<PromptWiseAnalysis | undefined> {
+  const params: Record<string, unknown> = {}
+  if (promptId == null) {
+    return undefined
+  }
+
+  params['contextId'] = projectId
+  if (dateRange?.startDate) params['startDate'] = dateRange.startDate
+  if (dateRange?.endDate) params['endDate'] = dateRange.endDate
+
+  const response = await api.get<PromptWiseAnalysis>(
+    `/api/PresenceSummary/prompt/${promptId}/analysis`,
     {
       params,
     },

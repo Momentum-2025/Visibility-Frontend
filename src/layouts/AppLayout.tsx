@@ -44,7 +44,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <nav className={styles.sidebar}>
         <NavLink to={'/dashboard'} className={styles.logo}>
           <TbBulb size={22} />
-          AgentX
+          Visibility Ai
         </NavLink>
         <UserSwitcher />
         <ul className={styles.menu}>

@@ -5,10 +5,10 @@ import styles from './DashboardPage.module.css'
 import {
   // fetchDashboardOverview,
   fetchOverallPresence,
-  fetchCitations,
+  // fetchCitations,
   mapPresenceToChartEntries,
   type PositionEntry,
-  fetchPosition,
+  // fetchPosition,
   mapPositionToChartEntries,
   type PresenceApiResponse,
   convertDayWiseToChartData,
@@ -43,10 +43,10 @@ export default function DashboardPage() {
     setError(null)
     Promise.all([
       // fetchDashboardOverview(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchOverallPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchCitations(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
+      fetchOverallPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),[],[]
+      // fetchCitations(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
       // fetchPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
-      fetchPosition(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
+      // fetchPosition(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
     ])
       .then(
         ([
@@ -68,7 +68,6 @@ export default function DashboardPage() {
       )
       .catch((err) => {
         setError('Could not load dashboard data. Try again later.')
-        console.log(err)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -136,11 +135,11 @@ export default function DashboardPage() {
               xFormatter={(d: any) => d}
               yFormatter={(v: any) => `${v}%`}
               series={[
-                { dataKey: 'Airbyte', label: 'Airbyte', color: '#0ea5e9' },
-                { dataKey: 'Fivetran', label: 'Fivetran', color: '#1d4ed8' },
-                { dataKey: 'Matillion', label: 'Matillion', color: '#22c55e' },
-                { dataKey: 'Stitch', label: 'Stitch', color: '#a855f7' },
-                { dataKey: 'Talend', label: 'Talend', color: '#fb7185' },
+                { dataKey: 'Airbyte', label: 'Airbyte', color: '#15739eff' },
+                { dataKey: 'Fivetran', label: 'Fivetran', color: '#2e4c9fff' },
+                { dataKey: 'Matillion', label: 'Matillion', color: '#2f8d78ff' },
+                { dataKey: 'Stitch', label: 'Stitch', color: '#8b4091ff' },
+                { dataKey: 'Talend', label: 'Talend', color: '#934646ff' },
               ]}
             />
         </section>
@@ -154,7 +153,7 @@ export default function DashboardPage() {
               'third_party_percentage',
             ]}
             labels={['Brand', 'Competitor', 'Third Party']}
-            colors={['#22c55e', '#ef4444', '#3b82f6']}
+            colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
             totalKey="brand_percentage"
             title="Citations"
             tooltipInfo="Percent of sources over period"
@@ -164,7 +163,7 @@ export default function DashboardPage() {
             data={mapPresenceToChartEntries(overallPresence?.dayWisePresence || [])} // your array of CitationEntry
             keys={['present_percentage', 'not_present']}
             labels={['Present', 'Not Present']}
-            colors={['#22c55e', '#ef4444', '#3b82f6']}
+            colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
             totalKey="present_percentage"
             title="Presence"
             tooltipInfo="Percent of Brand Presence over period"
@@ -174,7 +173,7 @@ export default function DashboardPage() {
             data={mapPositionToChartEntries(positionData)} // your array of CitationEntry
             keys={['top', 'middle', 'bottom', 'missing']}
             labels={['Top', 'Middle', 'Bottom', 'Missing']}
-            colors={['#22c55e', '#efad44ff', '#fffb00ff']}
+            colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
             totalKey="top"
             title="Position"
             tooltipInfo="Position of brand over period"
@@ -184,7 +183,7 @@ export default function DashboardPage() {
             data={mapPresenceToChartEntries(overallPresence?.dayWisePresence || [])} // your array of CitationEntry
             keys={['present_percentage', 'not_present']}
             labels={['Present', 'Not Present']}
-            colors={['#22c55e', '#ef4444', '#3b82f6']}
+            colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
             totalKey="present_percentage"
             title="Presence"
             tooltipInfo="Percent of Brand Presence over period"

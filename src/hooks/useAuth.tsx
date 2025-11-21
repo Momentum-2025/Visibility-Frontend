@@ -42,8 +42,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // const storedUser = localStorage.getItem('user')
-    // if (storedUser) setUser(JSON.parse(storedUser))
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) setUser(JSON.parse(storedUser))
     setLoading(false)
   }, [])
   const { setCurrentProjectId, setProjects } = useProject()

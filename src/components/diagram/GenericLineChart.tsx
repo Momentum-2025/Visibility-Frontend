@@ -67,7 +67,7 @@ export function GenericLineChart<T extends Record<string, any>>({
                 name={s.label ?? String(s.dataKey)}
                 stroke={s.color ?? "#3b82f6"}
                 strokeWidth={s.strokeWidth ?? 2}
-                dot={false}
+                dot={true}
                 activeDot={{ r: 4 }}
               />
             ))}

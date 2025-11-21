@@ -22,6 +22,7 @@ export interface TagPresenceSummary {
 }
 
 export interface TableRowData{
+  itemId:string
   item:string;
   totalResponses:number;
   totalVarietiesOfItem:number;
@@ -33,9 +34,11 @@ export type TagPresenceSummaryList = TagPresenceSummary[];
 export interface PromptDisplayData {
   isTagWiseData: boolean;
   isTagSpecificData: boolean;
+  isPromptSpecificData : boolean
   tagWiseData: TagPresenceSummaryList;
   tagSpecificData: TagAnalysisResponse;
-  seedPromptData:PromptInfo[]
+  seedPromptData:PromptInfo[];
+  promptSpecificData:PromptWiseAnalysis
 }
 
 export interface PromptWiseAnalysis {
@@ -43,9 +46,10 @@ export interface PromptWiseAnalysis {
   promptText: string;
   totalResponses: number;
   presenceData: PresenceItem[];
+  dailyResponseData?:DayWisePresence[]
 }
 
-export interface TagWiseDayWisePresence {
+export interface DayWisePresence {
   date: string; // ISO date string
   totalResponses: number;
   ownPresenceCount: number;
@@ -57,12 +61,12 @@ export interface TagAnalysisResponse {
   totalPrompts: number;
   totalResponses: number;
   promptWiseAnalysis: PromptWiseAnalysis[];
-  tagWiseDayWisePresence: TagWiseDayWisePresence[];
+  tagWiseDayWisePresence: DayWisePresence[];
 }
 
 
 export function mapPresenceToChartEntries(
-  presenceData: TagWiseDayWisePresence[],
+  presenceData: DayWisePresence[],
 ): ChartEntry[] {
   return presenceData.map((presence) => ({
     period: presence.date,

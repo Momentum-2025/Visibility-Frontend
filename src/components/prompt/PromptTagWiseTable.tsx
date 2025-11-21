@@ -6,10 +6,10 @@ import styles from './PromptTagWiseTable.module.css'
 interface TagPresenceTableProps {
   columns?: string[]
   data: TableRowData[]
-  onRowClick?: (tag: string) => any
+  onRowClick?: (filterKey: string) => any
 }
 
-const PromptTagWiseTable: React.FC<TagPresenceTableProps> = ({
+const PromptDataTable: React.FC<TagPresenceTableProps> = ({
   columns = ['Tags', 'Data', 'Presence', 'Citations', 'Competitors'],
   data,
   onRowClick,
@@ -34,7 +34,7 @@ const PromptTagWiseTable: React.FC<TagPresenceTableProps> = ({
     try {
       // Call the API function passed as prop
       if (onRowClick) {
-        const data = await onRowClick(item.item)
+        const data = await onRowClick(item.itemId)
         setDetailData(data)
       }
     } catch (error) {
@@ -186,4 +186,4 @@ const PromptTagWiseTable: React.FC<TagPresenceTableProps> = ({
   )
 }
 
-export default PromptTagWiseTable
+export default PromptDataTable

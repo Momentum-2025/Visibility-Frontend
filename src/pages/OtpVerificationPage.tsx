@@ -59,7 +59,6 @@ const OtpVerification: React.FC = () => {
     // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('OTP Verified:', otpValue);
       // Navigate to next page or show success message
       alert('OTP Verified Successfully!');
     } catch (error) {
@@ -74,7 +73,6 @@ const OtpVerification: React.FC = () => {
     setOtp(new Array(6).fill(''));
     inputRefs.current[0]?.focus();
     // Add your resend OTP logic here
-    console.log('Resending OTP...');
     alert('OTP has been resent to your email');
   };
 
