@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate, Link } from 'react-router-dom'
@@ -87,20 +86,8 @@ const LoginPage: React.FC = () => {
             />
           </label>
 
-          <label>
-            Password
-            <input
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              placeholder="••••••••"
-            />
-          </label>
 
-          <div className={styles.optionsRow}>
+          {/* <div className={styles.optionsRow}>
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
@@ -110,7 +97,7 @@ const LoginPage: React.FC = () => {
               Remember me
             </label>
             <Link to="/forgot" className={styles.forgot}>Forgot password</Link>
-          </div>
+          </div> */}
 
           {error && <div className={styles.error}>{error}</div>}
 

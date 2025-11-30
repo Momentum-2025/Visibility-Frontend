@@ -57,6 +57,7 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
           <div className={styles.headerCell}>{columns[4]}</div>
         </div>
 
+        {data.length == 0 && <div className={styles.emptyTable}> No data to display</div>}
         {/* Rows */}
         {data.map((item, index) => (
           <React.Fragment key={index}>
@@ -105,9 +106,9 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
                   </div> */}
                   <div className={styles.metricStats}>
                     <span className={styles.metricValue}>
-                      {item.presenceData[0]?.presencePercentage || 32}%
+                      {item.presenceData[0]?.presencePercentage || 0}%
                     </span>
-                    <span className={styles.metricChange}>-21%</span>
+                    {/* <span className={styles.metricChange}>-21%</span> */}
                   </div>
                 </div>
               </div>
@@ -126,8 +127,8 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
                     </svg>
                   </div> */}
                   <div className={styles.metricStats}>
-                    <span className={styles.metricValue}>15%</span>
-                    <span className={styles.metricChange}>-57%</span>
+                    <span className={styles.metricValue}>0%</span>
+                    {/* <span className={styles.metricChange}>-57%</span> */}
                   </div>
                 </div>
               </div>

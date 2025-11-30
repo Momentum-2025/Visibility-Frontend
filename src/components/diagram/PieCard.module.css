@@ -1,13 +1,14 @@
 .PieCard {
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 16px rgba(44,62,80,0.07);
+  border-radius: 5px;
+  /* box-shadow: 0 2px 16px rgba(44,62,80,0.07); */
   padding: 22px 22px 14px 22px;
   /* max-width: 430px; */
   min-width: 340px;
   display: flex;
   flex-direction: column;
   font-family: 'Inter', Arial, sans-serif;
+    border: #e9e9e9 solid .1px;;
 }
 
 .titleRow {
@@ -20,8 +21,9 @@
   color: #35795c;
 }
 .title {
-  color: #20253a;
-  font-weight: 600;
+  font-size: 1em;
+  color: #81878f;
+  font-weight: 300;
 }
 .infoIcon {
   border-radius: 50%;
@@ -59,7 +61,7 @@
   pointer-events: none;
 }
 .pieValue {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #222;
 }
@@ -102,14 +104,20 @@
 .miniLineRow {
   display: flex;
   align-items: center;
-  margin-top: 18px;
+  /* margin-top: 18px; */
   gap: 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  /* border-top: 1px solid #f0f0f0; */
 }
 
 .miniLineChart {
-  width: 55px;
-  height: 28px;
-  background: #f7f9fa;
+  height: 40px;
+  /* width: 100%; */
+  position: relative;
+  /* width:110px; */
+  /* height: 30px; */
+  /* background: #f7f9fa; */
   border-radius: 7px;
   box-shadow: 0 0.5px 2px rgba(44,62,80,0.04);
   display: flex;
@@ -118,6 +126,6 @@
 
 .miniLineLabel {
   font-size: 1rem;
-  color: #22c55e;
+  color: #26673e;
   font-weight: 500;
 }

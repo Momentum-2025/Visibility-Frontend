@@ -1,7 +1,9 @@
 .layout {
   display: flex;
   height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
   background-color: #ffffff;
 }
 
@@ -20,9 +22,9 @@
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #2c2c2c;
+  font-size: 25px;
+  font-weight: 750;
+  color: rgb(102, 85, 155);
   padding: 0 24px;
   margin-bottom: 32px;
   display: flex;
@@ -34,7 +36,7 @@
   content: '';
   width: 32px;
   height: 32px;
-  background-color: #000000;
+  background-color: #2b2154;
   border-radius: 12px;
   margin-right: 12px;
   box-shadow: 0 4px 12px rgba(255, 159, 122, 0.25);
@@ -71,12 +73,12 @@
 
 .menuItem:hover {
   /* background-color: #fef9f5; */
-  color: #000000;
+  color: #2b2154;
   transform: translateX(4px);
 }
 
 .menuItem.active {
-  color: #2c2c2c;
+  color: #2b2154;
   background-color: #ffffff;
   font-weight: 600;
   /* box-shadow: 0 2px 8px rgba(255, 159, 122, 0.15); */
@@ -90,7 +92,7 @@
   transform: translateY(-50%);
   width: 4px;
   height: 24px;
-  background-color: #000000;
+  background-color: #2b2154;
   border-radius: 2px;
 }
 
@@ -142,7 +144,7 @@
 }
 
 .upgradeBtn:hover {
-  background-color: #000000;
+  background-color: #2b2154;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(255, 159, 122, 0.3);
 }
@@ -178,7 +180,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #000000;
+  background-color: #2b2154;
   color: white;
   font-size: 12px;
   font-weight: 600;
@@ -228,15 +230,21 @@
   align-items: center;
   padding: 16px 0;
   margin-top: 8px;
+  gap: 10px;
 }
 
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 12px;
-  object-fit: cover;
-  border: 2px solid #000000;
+  background: #f6f6f8;
+  color: #2b2154;
+  font-size: 1.35rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
 }
 
 .profile span {
@@ -261,22 +269,150 @@
   position: relative;
 }
 
+/* Add these styles to your AppLayout.module.css */
+
+/* Purple Theme - Bold Numbers */
+.newUserSideBar {
+  width: 300px;
+  background: linear-gradient(135deg, #2b2154 0%, #1a1335 100%);
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle glow effect */
+.newUserSideBar::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.newUserSideBarHeading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+}
+
+.newUserSideBarSubHeading {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 12px 0 0 0;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+/* Get Started heading */
+.newUserSideBar > div:last-of-type {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.newUserSideBar > div:last-of-type > h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.getStartedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  counter-reset: step-counter;
+}
+
+.getStartedSection .newUserSideBarSubHeading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+  counter-increment: step-counter;
+}
+
+.getStartedSection .newUserSideBarSubHeading::before {
+  content: counter(step-counter);
+  width: 28px;
+  height: 28px;
+  background: rgba(167, 139, 250, 0.2);
+  border: 2px solid rgba(167, 139, 250, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #a78bfa;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.getStartedSection .newUserSideBarSubHeading:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(167, 139, 250, 0.3);
+  transform: translateX(6px);
+}
+
+.getStartedSection .newUserSideBarSubHeading:hover::before {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  color: #1a1335;
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .newUserSideBar {
+    width: 100%;
+    padding: 32px 24px;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-height: 800px) {
   .upgrade {
     margin: 12px 24px;
     padding: 16px;
   }
-  
+
   .upgradeDesc {
     margin-bottom: 12px;
     font-size: 13px;
   }
-  
+
   .menuItem {
     padding: 12px 24px;
   }
-  
+
   .logo {
     margin-bottom: 24px;
   }
@@ -287,26 +423,26 @@
     margin: 8px 24px;
     padding: 12px;
   }
-  
+
   .upgradeTitle {
     font-size: 15px;
   }
-  
+
   .upgradeDesc {
     font-size: 12px;
     margin-bottom: 10px;
   }
-  
+
   .upgradeBtn {
     padding: 10px 16px;
     font-size: 13px;
   }
-  
+
   .menuItem {
     padding: 10px 24px;
     font-size: 14px;
   }
-  
+
   .bottomSection {
     padding: 16px 24px 20px 24px;
   }
@@ -317,50 +453,51 @@
     margin-bottom: 16px;
     font-size: 18px;
   }
-  
+
   .upgrade {
     margin: 6px 24px;
     padding: 10px;
   }
-  
+
   .upgradeTitle {
     font-size: 14px;
     margin-bottom: 6px;
   }
-  
+
   .upgradeDesc {
     font-size: 12px;
     margin-bottom: 8px;
   }
-  
+
   .upgradeBtn {
     padding: 8px 12px;
     font-size: 12px;
   }
-  
+
   .menuItem {
     padding: 8px 24px;
     font-size: 13px;
   }
-  
+
   .bottomSection {
     padding: 12px 24px 16px 24px;
   }
-  
-  .infoItem, .logout {
+
+  .infoItem,
+  .logout {
     padding: 8px 0;
     font-size: 13px;
   }
-  
+
   .profile {
     padding: 12px 0;
   }
-  
+
   .avatar {
     width: 36px;
     height: 36px;
   }
-  
+
   .profile span {
     font-size: 13px;
   }

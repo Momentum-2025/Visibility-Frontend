@@ -14,9 +14,9 @@
 }
 
 .heading {
-  font-size: 2.3rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #222336;
+  color: rgb(102, 85, 155);
 }
 
 .saveBtn {
@@ -25,7 +25,7 @@
   border-radius: 7px;
   padding: 8px 16px;
   font-weight: 500;
-  color: #4567e7;
+  color: rgb(102, 85, 155);
   box-shadow: 0 1px 3px rgba(44, 62, 80, 0.07);
   transition: background 0.2s;
 }
@@ -41,7 +41,7 @@
 
 .filterBtn {
   background: rgba(255, 255, 255, 0.888);
-  border: none;
+  /* border: none; */
   border-radius: 8px;
   padding: 10px 18px;
   font-size: 1rem;
@@ -64,11 +64,12 @@
   align-items: stretch;
   width: 100%;
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 16px rgba(44, 62, 80, 0.07);
+  border-radius: 5px;
+  /* box-shadow: 0 2px 16px rgba(44, 62, 80, 0.07); */
+  border: #e9e9e9 solid 0.1px;
   margin-bottom: 24px;
   padding: 0;
-  min-height: 115px;
+  min-height: 20px;
   overflow: hidden;
 }
 
@@ -78,10 +79,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 28px 30px;
+  padding: 10px 15px;
   background: transparent;
   min-width: 0;
-  min-height: 20px;/*115px*/
+  min-height: 20px; /*115px*/
   /* Remove border and shadow here, apply to parent (statsRow) instead */
   border-right: 1px solid #eff0f2;
 }
@@ -99,7 +100,7 @@
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #21253a;
   letter-spacing: 0.3px;
@@ -129,38 +130,44 @@
   object-fit: contain;
   display: block;
 }
-
-.metricTiles
-{
+.metricTileWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2.8rem 2.8rem;
   align-content: start;
-  padding-bottom: 2rem
+  padding-bottom: 2rem;
+}
+.metricTiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2.8rem 2.8rem;
+  align-content: start;
+  padding-bottom: 2rem;
 }
 
 .dataSection {
- margin-top: 48px;
+  margin-top: 48px;
 }
 .subHeading {
- font-size: 1.2rem;
- font-weight: 600;
- margin-bottom: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 .table {
- width: 100%;
- border-collapse: collapse;
- background: #fff;
- font-size: 0.98rem;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 0.98rem;
 }
-.table th, .table td {
- border: 1px solid #f0f0f2;
- padding: 8px 14px;
- text-align: left;
+.table th,
+.table td {
+  border: 1px solid #f0f0f2;
+  padding: 8px 14px;
+  text-align: left;
 }
 .table th {
- background: #f7f7fa;
- font-weight: 700;
+  background: #f7f7fa;
+  font-weight: 700;
 }
 
 /* Add these styles to PromptsPage.module.css */
@@ -188,7 +195,7 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: white;
-  border: 1px solid #d1d5db;
+  /* border: 1px solid #d1d5db; */
   border-radius: 6px;
   font-size: 0.875rem;
   color: #374151;
@@ -198,7 +205,7 @@
 
 .filterBtn:hover {
   background-color: #f9fafb;
-  border-color: #9ca3af;
+  border-color: rgb(102,85,155);
 }
 
 .closeX {
@@ -232,5 +239,43 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2.8rem 2.8rem;
   align-content: start;
-  padding-bottom: 2rem
+  padding-bottom: 1rem;
+}
+.addPromtText {
+  display: none;
+}
+.addPromptBtn {
+  position: fixed;
+  bottom: 35px;
+  right: 45px;
+  max-width: 155px;
+  height: 46px;
+  border-radius: 25px;
+  background-color: rgb(102, 85, 155);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  z-index: 40;
+}
+
+.addPromptBtn:hover {
+  background-color: rgb(102, 85, 155);
+  box-shadow:
+    0 10px 15px rgba(0, 0, 0, 0.1),
+    0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
+}
+
+.addPromptBtn:hover .addPromtText {
+  display: block;
+}
+.addPromptBtn:active {
+  transform: scale(0.95);
 }

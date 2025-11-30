@@ -1,0 +1,289 @@
+.chartWrapper {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 24px;
+  /* box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06); */
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.3s ease;
+}
+
+.chartWrapper:hover {
+  /* box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05); */
+}
+
+.chartTitle {
+  font-size: 1em;
+  font-weight: 300;
+  color: #81878f;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+}
+
+.chartContent {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  background: #ffffff;
+  border-radius: 8px;
+  /* border: 1px solid #e5e7eb; */
+  overflow: hidden;
+}
+
+.lineChartSection {
+  flex: 1;
+  min-width: 0;
+  background: #ffffff;
+  padding: 16px 16px 16px 16px;
+}
+
+.dividerLine {
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #d1d5db 10%,
+    #d1d5db 90%,
+    transparent 100%
+  );
+  flex-shrink: 0;
+  position: relative;
+}
+
+.dividerLine::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #9ca3af;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
+}
+
+.barChartSection {
+  width: 500px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 16px 16px 16px 0;
+}
+
+.barChartHeader {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 16px;
+  margin-left: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.barChartContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  /* justify-content: space-evenly; */
+}
+
+.barItem {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+.barConnection {
+  display: flex;
+  align-items: center;
+  width: 16px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.connectionDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+
+.connectionLine {
+  width: 16px;
+  height: 2px;
+  opacity: 0.4;
+}
+
+.barContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barLabelSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.barColorIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.barLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4b5563;
+  letter-spacing: -0.01em;
+}
+
+.barWrapper {
+  background: #f3f4f6;
+  border-radius: 6px;
+  height: 0.5em;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 6px;
+  position: relative;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  min-width: 45px;
+}
+
+.barFill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 2.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.barValue {
+  font-size: 0.7em;
+  /* font-weight: 700; */
+  color: #2b2154;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.02em;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .barChartSection {
+    width: 220px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .chartContent {
+    flex-direction: column;
+  }
+
+  .dividerLine {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      #d1d5db 10%,
+      #d1d5db 90%,
+      transparent 100%
+    );
+  }
+
+  .dividerLine::before {
+    display: none;
+  }
+
+  .barChartSection {
+    width: 100%;
+    padding: 0 16px 16px 16px;
+  }
+
+  .barChartHeader {
+    margin-left: 0;
+  }
+
+  .barChartContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .barConnection {
+    display: none;
+  }
+
+  .barLabelSection {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .chartWrapper {
+    padding: 16px;
+  }
+
+  .chartTitle {
+    font-size: 1em;
+    margin-bottom: 16px;
+  }
+
+  .lineChartSection {
+    padding: 12px;
+  }
+
+  .barChartSection {
+    padding: 0 12px 12px 12px;
+  }
+
+  .barChartContainer {
+    grid-template-columns: 1fr;
+  }
+}

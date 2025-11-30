@@ -10,6 +10,8 @@ import { ProjectProvider } from './contexts/ProjectContext'
 import PromptsPage from './pages/PromptsPage'
 import OtpVerification from './pages/OtpVerificationPage'
 import AuthFlow from './pages/AuthFlow'
+import LandingPage from './pages/LandingPage'
+import CitationsPage from './pages/CitationsPage'
 
 function App() {
   return (
@@ -21,11 +23,14 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/context" element={<ContextPage />} />
               <Route path="/prompts" element={<PromptsPage />} />
+              <Route path="/citations" element={<CitationsPage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/otp-verification" element={<OtpVerification />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/" element={<AuthFlow />} />
+            <Route path="/auth/callback" element={<AuthFlow />} />
+            <Route path="/landing" element={<LandingPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

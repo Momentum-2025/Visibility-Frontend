@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styles from './BrandInfoSection.module.css'
-import { loadAllContextInfo, saveBrandInfo } from '../../services/contextService'
+import {
+  loadAllContextInfo,
+  saveBrandInfo,
+} from '../../services/contextService'
 import type { BrandInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
@@ -18,7 +21,20 @@ const emptyBrand: BrandInfo = {
   alternativeNames: [],
   alternativeWebsite: [],
   personas: [],
-  keyTopics: []
+  keyTopics: [],
+}
+
+// Helper to convert array to comma-separated string for display
+const arrayToString = (arr: string[] | undefined): string => {
+  return arr && arr.length > 0 ? arr.join(', ') : ''
+}
+
+// Helper to convert comma-separated string to array
+const stringToArray = (str: string): string[] => {
+  return str
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
 }
 
 export default function BrandInfoSection() {
@@ -26,37 +42,77 @@ export default function BrandInfoSection() {
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(true)
-  const { currentProjectId, setCurrentProjectId, projects } = useProject()
+  const { currentProjectId, setCurrentProjectId, projects, setProjects } =
+    useProject()
+
+  // Form state for string representations of array fields
+  const [formValues, setFormValues] = useState({
+    alternativeNames: '',
+    alternativeWebsite: '',
+  })
 
   useEffect(() => {
+    //console.log(currentProjectId);
     // Load brand info from local storage or API
-    if (currentProjectId)
-      loadAllContextInfo('system').then((data) => {
-        if (data) setBrand(data[0])
+    if (currentProjectId && currentProjectId != '') {
+      loadAllContextInfo().then((data) => {
+        const currentBrand = data.filter((o) => o.id == currentProjectId)[0]
+        if (data && currentBrand) {
+          setBrand(currentBrand)
+          // Convert arrays to strings for form display
+          setFormValues({
+            alternativeNames: arrayToString(currentBrand.alternativeNames),
+            alternativeWebsite: arrayToString(currentBrand.alternativeWebsite),
+          })
+        }
       })
-    setLoading(false) // Always set loading false, even if no data
+    }
+    setLoading(false)
   }, [currentProjectId])
 
   function onFieldChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
-    setBrand((brand) => ({
-      ...brand,
-      [e.target.name]: e.target.value,
-    }))
+    const { name, value } = e.target
+
+    // Handle array fields separately
+    if (name === 'alternativeNames' || name === 'alternativeWebsite') {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    } else {
+      setBrand((brand) => ({
+        ...brand,
+        [name]: value,
+      }))
+    }
     setSuccess(false)
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    await saveBrandInfo(brand).then((data) => {
-      if (data)
-         setCurrentProjectId(data.brandInfo.id)
-        projects.push(({
-          id: data.brandInfo.id ?? '',
-          name: data.brandInfo.name,
-        }))
+
+    // Convert string form values to arrays before saving
+    const brandToSave: BrandInfo = {
+      ...brand,
+      alternativeNames: stringToArray(formValues.alternativeNames),
+      alternativeWebsite: stringToArray(formValues.alternativeWebsite),
+      id: currentProjectId ?? '',
+    }
+
+    await saveBrandInfo(brandToSave).then((data) => {
+      if (data && (!currentProjectId || currentProjectId == '')) {
+        setCurrentProjectId(data.message)
+        projects.push({
+          id: data.message,
+          name: brandToSave.name,
+        })
+      } else {
+        setCurrentProjectId(brandToSave.id)
+        setProjects(projects)
+      }
     })
     setSaving(false)
     setSuccess(true)
@@ -71,11 +127,13 @@ export default function BrandInfoSection() {
 
   // Brand is empty if all fields empty or only empty strings
   const isEmpty =
-    !brand.name &&
-    !brand.alternativeNames &&
-    !brand.description &&
-    !brand.locationId &&
-    !brand.website
+    !brand ||
+    (!brand.name &&
+      !formValues.alternativeNames &&
+      !brand.description &&
+      !brand.locationId &&
+      !brand.website)
+
   return (
     <section className={styles.card}>
       <div className={styles.sectionHeader}>
@@ -94,7 +152,7 @@ export default function BrandInfoSection() {
           <span>Brand Name</span>
           <input
             name="name"
-            value={brand.name}
+            value={brand?.name}
             onChange={onFieldChange}
             required
             className={styles.input}
@@ -105,7 +163,7 @@ export default function BrandInfoSection() {
           <span>Alternative Names</span>
           <input
             name="alternativeNames"
-            value={brand.alternativeNames}
+            value={formValues.alternativeNames}
             onChange={onFieldChange}
             className={styles.input}
             placeholder="Comma-separated names"
@@ -115,7 +173,7 @@ export default function BrandInfoSection() {
           <span>Description</span>
           <textarea
             name="description"
-            value={brand.description}
+            value={brand?.description}
             onChange={onFieldChange}
             rows={3}
             className={styles.input}
@@ -126,17 +184,27 @@ export default function BrandInfoSection() {
           <span>Country</span>
           <input
             name="country"
-            value={brand.locationId}
+            value={brand?.locationId}
             onChange={onFieldChange}
             className={styles.input}
             placeholder="Brand's primary country"
           />
         </label>
         <label>
+          <span>Website</span>
+          <input
+            name="website"
+            value={brand?.website}
+            onChange={onFieldChange}
+            className={styles.input}
+            placeholder="https://example.com"
+          />
+        </label>
+        <label>
           <span>Alternative Websites</span>
           <input
-            name="websites"
-            value={brand.website}
+            name="alternativeWebsite"
+            value={formValues.alternativeWebsite}
             onChange={onFieldChange}
             className={styles.input}
             placeholder="Comma-separated URLs"

@@ -1,0 +1,76 @@
+.exportButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 400px;
+  /* margin-left: auto; */
+}
+
+.exportButton:hover {
+  border-color: #cccccc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.exportButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.exportButton:disabled:hover {
+  border-color: #e0e0e0;
+  box-shadow: none;
+}
+
+.exportText {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(102,85,155);
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.exportSubtext {
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: left;
+  flex: 1;
+}
+
+.exportIcon {
+  flex-shrink: 0;
+  color: #666666;
+  transition: transform 0.2s ease;
+}
+
+.exportButton:hover .exportIcon {
+  transform: translateY(2px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .exportButton {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .exportIcon {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .exportButton:hover .exportIcon {
+    transform: translateY(-50%) translateY(2px);
+  }
+}

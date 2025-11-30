@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './UserSwitcher.module.css';
 import { useProject, type Project } from '../../contexts/ProjectContext';
 
 export default function UserSwitcher() {
-  const { projects, setCurrentProjectId } = useProject();
-  const [currentProfile, setCurrentProfile] = useState<Project>(projects[0]);
+  const { projects, setCurrentProjectId, currentProjectId } = useProject();
+  const [currentProfile, setCurrentProfile] = useState<Project>(projects.filter(o => o.id == currentProjectId)[0] ?? projects[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function handleSwitch(profile:Project) {

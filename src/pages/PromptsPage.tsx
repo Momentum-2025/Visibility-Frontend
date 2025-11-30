@@ -14,9 +14,13 @@ import { PromptObservationsTable } from '../components/prompt/PromptObservations
 import { usePromptFilters } from '../hooks/useFilters'
 import { FilterModal } from '../components/filter/FilterModal'
 import { PieCard } from '../components/diagram/PieCard'
-import { GenericLineChart } from '../components/diagram/GenericLineChart'
+import { Plus } from 'lucide-react'
+import AddPromptModal from '../components/prompt/AddPromptModal'
+import { useNavigate } from 'react-router-dom'
 
 export default function PromptsPage() {
+  
+
   const { currentProjectId } = useProject()
   const {
     filters,
@@ -30,12 +34,25 @@ export default function PromptsPage() {
   const [promptData, setPromptData] = useState<PromptDisplayData>()
 
   const [loading, setLoading] = useState(true)
-  const [obsLoading, setObsLoading] = useState(true)
+  // const [obsLoading, setObsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [obsError, setObsError] = useState<string | null>(null)
+  // const [obsError, setObsError] = useState<string | null>(null)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+  const [isAddPromptModalOpen, setIsAddPromptModalOpen] = useState(false)
+
+  const navigate = useNavigate();
+  console.log(currentProjectId)
+  if(!currentProjectId || currentProjectId == '')
+  {
+    navigate('/context?isSignup=true')
+  }
   // Fetch data when filters or project changes
   useEffect(() => {
+    if(isAddPromptModalOpen)
+    {
+      return;
+    }
+    
     let cancelled = false
     setLoading(true)
     setError(null)
@@ -46,21 +63,21 @@ export default function PromptsPage() {
           setPromptData(promptData)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setError('Could not load summary for prompts data. Try again later.')
-        setObsError('Could not load prompt obs data. Try again later.')
+        // setObsError('Could not load prompt obs data. Try again later.')
       })
       .finally(() => {
         if (!cancelled) {
-          setObsLoading(false)
+          // setObsLoading(false)
           setLoading(false)
         }
       })
-
+    setLoading(false)
     return () => {
       cancelled = true
     }
-  }, [currentProjectId, filters]) // Re-fetch when filters change
+  }, [currentProjectId, filters, isAddPromptModalOpen]) // Re-fetch when filters change
 
   // Format date range display
   const formatDateRange = () => {
@@ -214,24 +231,10 @@ export default function PromptsPage() {
                   )} // your array of CitationEntry
                   keys={['present_percentage', 'not_present']}
                   labels={['Present', 'Not Present']}
-                  colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
+                  colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
                   totalKey="present_percentage"
                   title="Presence"
                   tooltipInfo="Percent of Brand Presence over period"
-                />
-              </div>
-            </section>
-            <section className={styles.metricTiles}>
-              <div>
-                <GenericLineChart
-                  title="Tag Presence (% of total)"
-                  data={promptData.tagSpecificData.tagWiseDayWisePresence.map(
-                    (o) => ({ date: o.date, Own: o.ownPresencePercentage }),
-                  )}
-                  xKey="date"
-                  xFormatter={(d: any) => d}
-                  yFormatter={(v: any) => `${v}%`}
-                  series={[{ dataKey: 'Own', label: 'Own', color: '#0ea5e9' }]}
                 />
               </div>
             </section>
@@ -240,6 +243,9 @@ export default function PromptsPage() {
 
         {promptData?.isPromptSpecificData && (
           <>
+            <h2 className={styles.subHeading}>
+              {promptData.promptSpecificData.promptText}
+            </h2>
             <section className={styles.metricTiles}>
               <PieCard
                 data={mapPresenceToChartEntries(
@@ -247,14 +253,12 @@ export default function PromptsPage() {
                 )} // your array of CitationEntry
                 keys={['present_percentage', 'not_present']}
                 labels={['Present', 'Not Present']}
-                colors={['#3f9591ff', '#c28a55ff', '#5a8ad8ff']}
+                colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
                 totalKey="present_percentage"
                 title="Presence"
                 tooltipInfo="Percent of Brand Presence over period"
               />
-            </section>
-            <section>
-              <GenericLineChart
+              {/* <GenericLineChart
                 title="Tag Presence (% of total)"
                 data={(
                   promptData.promptSpecificData.dailyResponseData ?? []
@@ -262,8 +266,8 @@ export default function PromptsPage() {
                 xKey="date"
                 xFormatter={(d: any) => d}
                 yFormatter={(v: any) => `${v}%`}
-                series={[{ dataKey: 'Own', label: 'Own', color: '#0ea5e9' }]}
-              />
+                series={[{ dataKey: 'Own', label: 'Own', color: '#fdba74' }]}
+              /> */}
             </section>
           </>
         )}
@@ -271,9 +275,9 @@ export default function PromptsPage() {
         {/* Data Section */}
         {!promptData?.isPromptSpecificData && (
           <section className={styles.dataSection}>
-            <h2 className={styles.subHeading}>Prompts</h2>
-            {obsLoading && <div>Loading...</div>}
-            {obsError && <div>{obsError}</div>}
+            <h2 className={styles.subHeading}>Prompt Stats</h2>
+            {/* {obsLoading && <div>Loading...</div>}
+              {obsError && <div>{obsError}</div>} */}
             {promptData?.isTagWiseData && (
               <PromptDataTable
                 data={promptData?.tagWiseData.map((o) => ({
@@ -318,12 +322,30 @@ export default function PromptsPage() {
                 }}
               />
             )}
+
+            {promptData?.isEmpty && <PromptDataTable data={[]} />}
           </section>
         )}
 
         {loading && <div className={styles.loading}>Loading...</div>}
         {error && <div className={styles.error}>{error}</div>}
       </div>
+
+      {/* Fixed Add Prompt Button */}
+      <button
+        className={styles.addPromptBtn}
+        onClick={() => setIsAddPromptModalOpen(true)}
+        aria-label="Add Prompt"
+      >
+        <span className={styles.addPromtText}>Add Prompt</span>
+        <Plus size={24} />
+      </button>
+
+      {/* Add Prompt Modal */}
+      <AddPromptModal
+        isOpen={isAddPromptModalOpen}
+        onClose={() => setIsAddPromptModalOpen(false)}
+      />
     </AppLayout>
   )
 }

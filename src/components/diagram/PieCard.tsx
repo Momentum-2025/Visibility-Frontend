@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import React from "react";
 import { Doughnut, Line } from 'react-chartjs-2'
 import 'chart.js/auto'
@@ -17,7 +18,7 @@ export function PieCard({
   // Compute averages as an object mapping {key: average}
   const averagesMap = keys.reduce<Record<string, number>>((result, key) => {
     const sum = data.reduce((acc, entry) => acc + (Number(entry[key]) || 0), 0)
-    result[key] = data.length ? sum / data.length : 0
+    result[key] = data.length ? Number((sum / data.length).toFixed(2)) : 0
     return result
   }, {})
 
@@ -29,7 +30,7 @@ export function PieCard({
         data: keys.map((key) => averagesMap[key]), // array from mapping
         backgroundColor: colors,
         borderWidth: 0,
-        cutout: '40%',
+        cutout: '70%',
       },
     ],
   }
@@ -42,19 +43,33 @@ export function PieCard({
 
   // Miniline data (trends by totalKey over time)
   const lineData = {
-    labels: data.map((entry) => entry.period),
-    datasets: [
-      {
-        label: 'Total',
-        data: data.map((entry) => Number(entry[totalKey]) || 0),
-        fill: true,
-        backgroundColor: 'rgba(16,185,129,0.07)',
-        borderColor: '#22c55e',
-        pointRadius: 0,
-        tension: 0.4,
+  labels: data.map((entry) => entry.period),
+  datasets: [
+    {
+      label: 'Total',
+      data: data.map((entry) => Number(entry[totalKey]) || 0),
+      fill: true,
+      backgroundColor: (context: any) => {
+        const chart = context.chart;
+        const { ctx, chartArea } = chart;
+        
+        if (!chartArea) {
+          return 'rgba(124, 111, 240, 0.15)';
+        }
+        
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, 'rgba(124, 111, 240, 1)');
+        gradient.addColorStop(1, 'rgba(124, 111, 240, 0.05)');
+        return gradient;
       },
-    ],
-  }
+      borderColor: '#7c6ff0',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 0,
+      tension: 0,
+    },
+  ],
+};
 
   // Legend summary for sidebar (latest period, can include percentages, etc)
   const legendInfo = keys.map((key, i) => ({
@@ -67,7 +82,7 @@ export function PieCard({
     <div className={styles.PieCard}>
       <div className={styles.titleRow}>
         <span className={styles.title}>{title}</span>
-        {tooltipInfo && <span className={styles.infoIcon}>i</span>}
+        {/* {tooltipInfo && <span className={styles.infoIcon}>i</span>} */}
         <span className={styles.subtitle}>(% of total)</span>
       </div>
       <div className={styles.contentRow}>
@@ -79,12 +94,12 @@ export function PieCard({
                 legend: { display: false },
                 tooltip: { enabled: true },
               },
-              cutout: '70%',
+              cutout: '50%',
               maintainAspectRatio: false,
             }}
           />
           <div className={styles.pieInner}>
-            <span className={styles.pieValue}>{pieTotal}%</span>
+            <span className={styles.pieValue}>{averagesMap[totalKey]}%</span>
           </div>
         </div>
         <ul className={styles.legend}>
@@ -105,17 +120,37 @@ export function PieCard({
           <Line
             data={lineData}
             options={{
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: { display: false },
                 tooltip: { enabled: false },
               },
-              scales: { x: { display: false }, y: { display: false } },
-              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  display: false,
+                  grid: { display: false },
+                },
+                y: {
+                  display: false,
+                  grid: { display: false },
+                  beginAtZero: false,
+                },
+              },
+              elements: {
+                line: {
+                  borderWidth: 2,
+                },
+              },
+              interaction: {
+                intersect: false,
+                mode: 'index',
+              },
             }}
-            height={36}
+            height={40}
           />
         </div>
-        <span className={styles.miniLineLabel}>Last 12 weeks</span>
+        {/* <span className={styles.miniLineLabel}>Last 12 weeks</span> */}
         {/* Add trend up/down with color etc. if you want */}
       </div>
     </div>

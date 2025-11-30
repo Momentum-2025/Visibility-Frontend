@@ -6,6 +6,7 @@ export interface Project {
   name: string;
   // Add additional fields if needed
 }
+
 interface ProjectContextType {
   currentProjectId: string | null;
   setCurrentProjectId: (id: string) => void;

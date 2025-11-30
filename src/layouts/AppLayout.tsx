@@ -1,88 +1,122 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './AppLayout.module.css'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import UserSwitcher from '../components/profile/UserSwitcher'
-import {
-  TbHome,
-  TbFileText,
-  TbBulb,
-  TbQuote,
-  // TbClipboardCheck,
-  // TbRobot,
-  TbCommand,
-  // TbUsers,
-} from 'react-icons/tb'
+import { TbHome, TbFileText, TbBulb, TbQuote, TbCommand } from 'react-icons/tb'
+import ManageAccountModal from '../components/profile/ManageAccountModal'
 
-// Update navItems:
 const navItems = [
   { label: 'Dashboard', to: '/dashboard', icon: <TbHome size={22} /> },
   { label: 'Prompts', to: '/prompts', icon: <TbFileText size={22} /> },
   { label: 'Insights', to: '/insights', icon: <TbBulb size={22} /> },
   { label: 'Citations', to: '/citations', icon: <TbQuote size={22} /> },
-  // {
-  //   label: 'Site Audits',
-  //   to: '/site-audits',
-  //   icon: <TbClipboardCheck size={22} />,
-  // },
-  // { label: 'AI Referrals', to: '/ai-referrals', icon: <TbRobot size={22} /> },
   { label: 'Context', to: '/context', icon: <TbCommand size={22} /> },
-  // { label: 'Team Members', to: '/team', icon: <TbUsers size={22} /> },
 ]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
+  const [showModal, setShowModal] = useState(false)
   const handleLogout = () => {
-    // Your logout logic here
-    // e.g. clear auth tokens, redirect to login page
     logout()
     navigate('/')
   }
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const isNewUser = urlParams.get('isSignup')
+
   return (
     <div className={styles.layout}>
-      <nav className={styles.sidebar}>
-        <NavLink to={'/dashboard'} className={styles.logo}>
-          <TbBulb size={22} />
-          Visibility Ai
-        </NavLink>
-        <UserSwitcher />
-        <ul className={styles.menu}>
-          {navItems.map(({ label, to, icon }) => (
-            <li key={to}>
-              <NavLink
-                to={to}
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.menuItem} ${styles.active}`
-                    : styles.menuItem
-                }
-              >
-                <span className={styles.icon}>{icon}</span>
-                <span>{label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-        {/* <div className={styles.upgrade}>
-          <div className={styles.upgradeTitle}>Upgrade to Pro</div>
-          <div className={styles.upgradeDesc}>Get 1 month free and unlock</div>
-          <button className={styles.upgradeBtn}>Upgrade</button>
-        </div> */}
+      {!isNewUser && (
+        <>
+          <nav className={styles.sidebar}>
+            <NavLink to={'/dashboard'} className={styles.logo}>
+              <TbBulb size={22} />
+              Visibility Ai
+            </NavLink>
+            <UserSwitcher />
+            <ul className={styles.menu}>
+              {navItems.map(({ label, to, icon }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${styles.menuItem} ${styles.active}`
+                        : styles.menuItem
+                    }
+                  >
+                    <span className={styles.icon}>{icon}</span>
+                    <span>{label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
 
-        <div className={styles.bottomSection}>
-          {/* <NavLink to="/help" className={styles.infoItem}>
-            Help & information
-          </NavLink> */}
-          <button className={styles.logout} onClick={handleLogout}>
-            Log out
-          </button>
-          <NavLink to="/profile" className={styles.profile}>
-            <img src="/avatar.svg" className={styles.avatar} alt="user" />
-            <span>akshay.krishnan@hevo...</span>
-          </NavLink>
+            <div className={styles.bottomSection}>
+              <button className={styles.logout} onClick={handleLogout}>
+                Log out
+              </button>
+              <button
+                onClick={() => setShowModal(true)}
+                className={styles.profile}
+              >
+                <div className={styles.avatar}>{(user?.email ?? 'U')[0]}</div>
+                <span>{user?.email}</span>
+              </button>
+            </div>
+          </nav>
+
+          <ManageAccountModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            userEmail={user?.email}
+            userName={user?.fullName}
+            company="Hevo"
+          />
+        </>
+      )}
+
+      {isNewUser && (
+        <div className={styles.newUserSideBar}>
+          <div>
+            <h2 className={styles.newUserSideBarHeading}>
+              Welcome to Visibility AI
+            </h2>
+            <p
+              className={styles.newUserSideBarSubHeading}
+              style={{ marginTop: '12px' }}
+            >
+              AI search analytics for marketing teams
+            </p>
+          </div>
+
+          <div>
+            <h3
+              className={styles.newUserSideBarHeading}
+              style={{ fontSize: '18px', marginBottom: '16px' }}
+            >
+              Get Started
+            </h3>
+            <div className={styles.getStartedSection}>
+              <div className={styles.newUserSideBarSubHeading}>
+                Create Your Brand
+              </div>
+              <div className={styles.newUserSideBarSubHeading}>
+                Add Your Competitors
+              </div>
+              <div className={styles.newUserSideBarSubHeading}>
+                Add Your Key Topics
+              </div>
+              <div className={styles.newUserSideBarSubHeading}>
+                Add Personas
+              </div>
+            </div>
+          </div>
         </div>
-      </nav>
+      )}
+
       <main className={styles.content}>{children}</main>
     </div>
   )

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './PersonaSection.module.css'
-import { loadAllContextInfo, savePersonas } from '../../services/contextService'
-import type { Persona } from '../../services/contextService'
+import { loadAllContextInfo, savePersona } from '../../services/contextService'
+import { deletePersona, type Persona } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
-const emptyPersona: Persona = { name: '', description: '', countries: '' }
+const emptyPersona: Persona = { id: '', name: '', description: '', targetCountry: '' }
 
 export default function PersonaSection() {
   const [personas, setPersonas] = useState<Persona[]>([])
@@ -13,12 +13,13 @@ export default function PersonaSection() {
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
   const [success, setSuccess] = useState(false)
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const { currentProjectId } = useProject()
 
   useEffect(() => {
     if (currentProjectId)
-      loadAllContextInfo('system').then((data) => {
-        setPersonas(data[0].personas)
+      loadAllContextInfo().then((data) => {
+        if (data) setPersonas(data[0]?.personas || [])
       })
     setLoading(false)
   }, [currentProjectId])
@@ -32,32 +33,66 @@ export default function PersonaSection() {
   async function handleAddPersona(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    const newList = [...personas, form]
-    await savePersonas(currentProjectId ?? '', newList)
+
+    let newList: Persona[]
+    if (editingIndex !== null) {
+      // Update existing persona
+      newList = personas.map((p, i) => (i === editingIndex ? form : p))
+    } else {
+      // Add new persona
+      newList = [...personas, form]
+    }
+
+    await savePersona(currentProjectId ?? '', form)
     setPersonas(newList)
     setSaving(false)
     setShowForm(false)
     setForm(emptyPersona)
+    setEditingIndex(null)
     setSuccess(true)
     setTimeout(() => setSuccess(false), 1200)
   }
 
-  async function handleRemove(idx: number) {
-    const newList = personas.filter((_p, i) => i !== idx)
-    await savePersonas(currentProjectId ?? '', newList)
+  function handleEdit(idx: number) {
+    setForm(personas[idx])
+    setEditingIndex(idx)
+    setShowForm(true)
+  }
+
+  function handleCancel() {
+    setShowForm(false)
+    setForm(emptyPersona)
+    setEditingIndex(null)
+  }
+
+  async function handleRemove(idx: string) {
+    const newList = personas.filter((_p) => _p.id !== idx)
+    // If removing the persona being edited, close the form
+    if (editingIndex && personas[editingIndex].id === idx) {
+      handleCancel()
+    }
+    await deletePersona(currentProjectId ?? '', idx)
     setPersonas(newList)
   }
 
   if (loading) return <section className={styles.card}>Loading...</section>
 
-  if(!currentProjectId)
+  if (!currentProjectId)
     return <section className={styles.card}>Create your brand to add persona</section>
 
   return (
     <section className={styles.card}>
       <div className={styles.sectionHeader}>
         <h2>Customer Personas</h2>
-        <button className={styles.addBtn} onClick={() => setShowForm(true)}>
+        <button 
+          className={styles.addBtn} 
+          onClick={() => {
+            setForm(emptyPersona)
+            setEditingIndex(null)
+            setShowForm(true)
+          }}
+          disabled={showForm}
+        >
           + New Persona
         </button>
         {success && <span className={styles.success}>Saved!</span>}
@@ -74,11 +109,12 @@ export default function PersonaSection() {
             placeholder="Persona name"
           />
           <input
-            name="countries"
-            value={form.countries}
+            name="targetCountry"
+            value={form.targetCountry}
             onChange={handleField}
+            required
             className={styles.input}
-            placeholder="Countries (comma-separated)"
+            placeholder="Target Country"
           />
           <textarea
             name="description"
@@ -91,12 +127,12 @@ export default function PersonaSection() {
           />
           <div className={styles.formButtons}>
             <button type="submit" className={styles.saveBtn} disabled={saving}>
-              {saving ? 'Saving...' : 'Add'}
+              {saving ? 'Saving...' : editingIndex !== null ? 'Update' : 'Add'}
             </button>
             <button
               type="button"
               className={styles.cancelBtn}
-              onClick={() => setShowForm(false)}
+              onClick={handleCancel}
             >
               Cancel
             </button>
@@ -114,15 +150,23 @@ export default function PersonaSection() {
           </tr>
         </thead>
         <tbody>
-          {personas.map((p, idx) => (
+          {personas?.map((p, idx) => (
             <tr key={idx}>
               <td>{p.name}</td>
               <td>{p.description}</td>
-              <td>{p.countries}</td>
+              <td>{p.targetCountry}</td>
               <td>
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => handleRemove(idx)}
+                  onClick={() => handleEdit(idx)}
+                  title="Edit persona"
+                  style={{ marginRight: '8px' }}
+                >
+                  ✎
+                </button>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleRemove(p.id)}
                   title="Delete persona"
                 >
                   ×

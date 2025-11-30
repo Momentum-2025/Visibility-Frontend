@@ -19,7 +19,7 @@
 .tableHeader {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background-color: #f9fafb;
+  background-color: #5a5476fc;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -27,7 +27,7 @@
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #ffffff;
 }
 
 /* Table Row */
@@ -61,8 +61,9 @@
 
 /* Tags Column */
 .tagText {
-  color: #9ca3af;
-  font-size: 0.875rem;
+  color: #3c3252;
+  font-weight: 400;
+  font-size: 1rem;
 }
 
 /* Data Column */
@@ -147,4 +148,13 @@
 .competitorMore {
   color: #9ca3af;
   font-size: 0.875rem;
+}
+
+.emptyTable
+{
+  max-width: 1400px;
+  min-height: 100px;
+  align-items: center;
+  text-align: center;
+  margin-top: 50px;
 }

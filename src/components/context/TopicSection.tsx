@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './TopicSection.module.css'
-import { loadAllContextInfo, saveTopics } from '../../services/contextService'
+import { deleteTopic, loadAllContextInfo, saveTopic } from '../../services/contextService'
 import type { Topic } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
-const emptyTopic: Topic = { name: '' }
+const emptyTopic: Topic = { topic: '' }
 
 export default function TopicSection() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -18,7 +18,7 @@ export default function TopicSection() {
   useEffect(() => {
     if (currentProjectId)
       loadAllContextInfo(currentProjectId ?? '').then((data) => {
-        setTopics(data[0].keyTopics)
+        if(data) setTopics(data[0]?.keyTopics)
       })
     setLoading(false)
   }, [currentProjectId])
@@ -31,7 +31,7 @@ export default function TopicSection() {
     e.preventDefault()
     setSaving(true)
     const newList = [...topics, form]
-    await saveTopics(currentProjectId ?? '', newList)
+    await saveTopic(currentProjectId ?? '', form)
     setTopics(newList)
     setForm(emptyTopic)
     setShowForm(false)
@@ -40,9 +40,9 @@ export default function TopicSection() {
     setTimeout(() => setSuccess(false), 1200)
   }
 
-  async function handleRemove(idx: number) {
-    const newList = topics.filter((_t, i) => i !== idx)
-    await saveTopics(currentProjectId ?? '', newList)
+  async function handleRemove(idx: string) {
+    const newList = topics.filter((_t) => _t.topic !== idx)
+    await deleteTopic(currentProjectId ?? '', idx)
     setTopics(newList)
   }
 
@@ -66,8 +66,8 @@ export default function TopicSection() {
       {showForm && (
         <form className={styles.formGrid} onSubmit={handleAddTopic}>
           <input
-            name="name"
-            value={form.name}
+            name="topic"
+            value={form.topic}
             onChange={handleField}
             required
             className={styles.input}
@@ -95,13 +95,13 @@ export default function TopicSection() {
           </tr>
         </thead>
         <tbody>
-          {topics.map((t, idx) => (
+          {topics?.map((t, idx) => (
             <tr key={idx}>
-              <td>{t.name}</td>
+              <td>{t.topic}</td>
               <td>
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => handleRemove(idx)}
+                  onClick={() => handleRemove(t.topic)}
                   title="Delete topic"
                 >
                   ×

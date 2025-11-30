@@ -20,7 +20,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null
-  emailLogin: (email: string, otp?: string) => Promise<void>
+  emailLogin: (email: string, otp?: string) => Promise<any>
   login: (
     email: string,
     password?: string,
@@ -40,7 +40,6 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) setUser(JSON.parse(storedUser))
@@ -54,13 +53,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       result = await handleEmailLoginOtpVerification(email, otp)
     } else {
       result = await handleEmailLogin(email)
-      return
+      return result.data.isNewUser
     }
 
     localStorage.setItem('token', JSON.stringify(result.data.token)) // use result.token
-    localStorage.setItem('user', JSON.stringify(result.data?.user ?? { email: email, fullName:'system'}))
+    localStorage.setItem('user', JSON.stringify(result.data?.user ?? { email: email, fullName:email.slice(0,email.length-10)}))
     // Save user/token to localStorage if needed
-    const userProjects = await loadUserProjects('system') // implement this call
+    const userProjects = await loadUserProjects() // implement this call
 
     if (userProjects.length > 0) {
       const lastUsedProjectId = userProjects[0].id // or your preferred logic
@@ -72,9 +71,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       )
       setCurrentProjectId(lastUsedProjectId ?? '') // from useProject hook
     } else {
-      setCurrentProjectId('68d4012cb35966b61d4cf679')
+      // navigate('/context')
+      // setCurrentProjectId('68d4012cb35966b61d4cf679')
     }
-    setUser({ email: email, fullName:'system'})
+    setUser({ email: email, fullName:email.slice(0,email.length-10)})
   }
 
   async function login(email: string, password?: string, googleToken?: string) {
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.setItem('token', JSON.stringify(result.token)) // use result.token
     localStorage.setItem('user', JSON.stringify(result.user))
     // Save user/token to localStorage if needed
-    const userProjects = await loadUserProjects('system') // implement this call
+    const userProjects = await loadUserProjects() // implement this call
 
     if (userProjects.length > 0) {
       const lastUsedProjectId = userProjects[0].id // or your preferred logic
@@ -96,8 +96,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })),
       )
       setCurrentProjectId(lastUsedProjectId ?? '') // from useProject hook
-    } else {
-      setCurrentProjectId('68d4012cb35966b61d4cf679')
+    } 
+    else {
+      // setCurrentProjectId('68d4012cb35966b61d4cf679')
     }
     setUser(result.user)
   }
@@ -126,8 +127,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   function logout() {
     setUser(null)
+    setProjects([])
+    setCurrentProjectId('')
     localStorage.removeItem('user')
     localStorage.removeItem('token')
+    localStorage.removeItem('currentProjectId')
+    localStorage.removeItem('projects')
     // additional cleanup if needed
   }
 

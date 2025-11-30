@@ -26,12 +26,13 @@ export interface TableRowData{
   item:string;
   totalResponses:number;
   totalVarietiesOfItem:number;
-  presenceData: PresenceItem[];
+  presenceData: PresenceItem[] | [];
 }
 
 export type TagPresenceSummaryList = TagPresenceSummary[];
 
 export interface PromptDisplayData {
+  isEmpty:boolean
   isTagWiseData: boolean;
   isTagSpecificData: boolean;
   isPromptSpecificData : boolean

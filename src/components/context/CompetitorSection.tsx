@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styles from './CompetitorSection.module.css'
 import {
   loadAllContextInfo,
-  saveCompetitors,
+  saveCompetitor,
+  deleteCompetitors,
 } from '../../services/contextService'
-import type {  CompetitorInfo } from '../../services/contextService'
+import type { CompetitorInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 
 const emptyCompetitor: CompetitorInfo = {
@@ -12,6 +13,21 @@ const emptyCompetitor: CompetitorInfo = {
   id: '',
   alternativeNames: null,
   websites: []
+}
+
+// Helper to convert array to comma-separated string for display
+const arrayToString = (arr: string[] | null | undefined): string => {
+  if (!arr || arr.length === 0) return ''
+  return arr.join(', ')
+}
+
+// Helper to convert comma-separated string to array
+const stringToArray = (str: string): string[] => {
+  if (!str || str.trim() === '') return []
+  return str
+    .split(',')
+    .map(item => item.trim())
+    .filter(item => item.length > 0)
 }
 
 export default function CompetitorSection() {
@@ -23,34 +39,63 @@ export default function CompetitorSection() {
   const [success, setSuccess] = useState(false)
   const { currentProjectId } = useProject()
 
+  // Form state for string representations of array fields
+  const [formValues, setFormValues] = useState({
+    alternativeNames: '',
+    websites: ''
+  })
+
   useEffect(() => {
     if (currentProjectId)
-      loadAllContextInfo('system').then((data) => {
-        setCompetitors(data[0].competitors)
+      loadAllContextInfo().then((data) => {
+        setCompetitors(data[0]?.competitors || [])
       })
     setLoading(false)
   }, [currentProjectId])
 
   function handleField(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+
+    // Handle array fields separately
+    if (name === 'alternativeNames' || name === 'websites') {
+      setFormValues(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    } else {
+      setForm({ ...form, [name]: value })
+    }
   }
 
   async function handleAddCompetitor(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    const newList = [...competitors, form]
-    await saveCompetitors(currentProjectId ?? '', newList)
+
+    // Convert string form values to arrays before saving
+    const competitorToSave: CompetitorInfo = {
+      ...form,
+      alternativeNames: formValues.alternativeNames 
+        ? stringToArray(formValues.alternativeNames) 
+        : null,
+      websites: stringToArray(formValues.websites)
+    }
+
+    competitorToSave.id = Date.now().toString();
+
+    const newList = [...competitors, competitorToSave]
+    await saveCompetitor(currentProjectId ?? '', competitorToSave)
     setCompetitors(newList)
     setForm(emptyCompetitor)
+    setFormValues({ alternativeNames: '', websites: '' })
     setShowForm(false)
     setSaving(false)
     setSuccess(true)
     setTimeout(() => setSuccess(false), 1200)
   }
 
-  async function handleRemove(idx: number) {
-    const newList = competitors.filter((_c, i) => i !== idx)
-    await saveCompetitors(currentProjectId ?? '', newList)
+  async function handleRemove(idx: string) {
+    const newList = competitors.filter((_c) => _c.id !== idx)
+    await deleteCompetitors(currentProjectId ?? '', idx)
     setCompetitors(newList)
   }
 
@@ -83,14 +128,14 @@ export default function CompetitorSection() {
           />
           <input
             name="alternativeNames"
-            value={form.alternativeNames?.join(',')}
+            value={formValues.alternativeNames}
             onChange={handleField}
             className={styles.input}
-            placeholder="Alternative names"
+            placeholder="Alternative names (comma-separated)"
           />
           <input
             name="websites"
-            value={form.websites}
+            value={formValues.websites}
             onChange={handleField}
             className={styles.input}
             placeholder="Website URLs (comma-separated)"
@@ -102,7 +147,11 @@ export default function CompetitorSection() {
             <button
               type="button"
               className={styles.cancelBtn}
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false)
+                setForm(emptyCompetitor)
+                setFormValues({ alternativeNames: '', websites: '' })
+              }}
             >
               Cancel
             </button>
@@ -119,15 +168,15 @@ export default function CompetitorSection() {
           </tr>
         </thead>
         <tbody>
-          {competitors.map((c, idx) => (
+          {competitors?.map((c, idx) => (
             <tr key={idx}>
               <td>{c.name}</td>
-              <td>{c.alternativeNames}</td>
-              <td>{c.websites}</td>
+              <td>{arrayToString(c.alternativeNames)}</td>
+              <td>{arrayToString(c.websites)}</td>
               <td>
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => handleRemove(idx)}
+                  onClick={() => handleRemove(c.id)}
                   title="Delete competitor"
                 >
                   ×

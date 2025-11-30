@@ -1,0 +1,118 @@
+.citationsWrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  /* background: #ffffff; */
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(102,85,155);
+}
+
+.filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.filterBtn {
+  background: rgba(255, 255, 255, 0.888);
+  /* border: none; */
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  color: #30344f;
+  /* box-shadow: 0px 2px 7px rgba(44, 62, 80, 0.04); */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.clearFiltersBtn {
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.clearFiltersBtn:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}
+
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  /* border: 1px solid #d1d5db; */
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterBtn:hover {
+  background-color: #f9fafb;
+  border-color: rgb(102,85,155);
+}
+
+.closeX {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.closeX:hover {
+  background-color: #d1d5db;
+  color: #111827;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.dataSection {
+  margin-top: 2vh;
+}
+
+.subHeading {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.metricTiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2.8rem 2.8rem;
+  align-content: start;
+  padding-bottom: 2rem
+}

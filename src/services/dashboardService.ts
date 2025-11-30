@@ -1,29 +1,30 @@
 import axios from 'axios'
 import api from './contextService' // your preconfigured axios instance
+import type { PromptFilters } from '../hooks/useFilters'
 //new
 export interface CompetitorDetail {
-  presenceCount: number;
-  denominatorCount: number;
-  presencePercentage: number;
+  presenceCount: number
+  denominatorCount: number
+  presencePercentage: number
 }
 
 export interface DayWisePresence {
-  date: string; // ISO string from API
-  competitorPresencePercentages: Record<string, number>;
-  ownCompanyPresencePercentage: number;
+  date: string // ISO string from API
+  competitorPresencePercentages: Record<string, number>
+  ownCompanyPresencePercentage: number
 }
 
 export interface PresenceApiResponse {
-  totalResponses: number;
-  ownPresenceCount: number;
-  ownPresencePercentage: number;
-  competitorDetails: Record<string, CompetitorDetail>;
-  dayWisePresence: DayWisePresence[];
+  totalResponses: number
+  ownPresenceCount: number
+  ownPresencePercentage: number
+  competitorDetails: Record<string, CompetitorDetail>
+  dayWisePresence: DayWisePresence[]
 }
 
 export interface ChartPoint {
-  date: string;
-  [key: string]: number | string; // for dynamic competitor keys + "own"
+  date: string
+  [key: string]: number | string // for dynamic competitor keys + "own"
 }
 
 /**
@@ -36,17 +37,20 @@ export interface ChartPoint {
  * ]
  */
 export function convertDayWiseToChartData(
-  input: DayWisePresence[]
+  input: DayWisePresence[],
 ): ChartPoint[] {
   return input.map((item) => {
-    const competitors = item.competitorPresencePercentages;
+    const competitors = item.competitorPresencePercentages
 
     return {
-      date: item.date,
+      date: new Date(item.date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      }),
       ...competitors,
       own: item.ownCompanyPresencePercentage,
-    };
-  });
+    }
+  })
 }
 
 //new
@@ -85,17 +89,19 @@ export interface PresenceEntry {
   present_percentage: number
 }
 
-export interface CitationEntry {
-  period: string
-  total_responses: number
-  total_sources: number
-  brand_source_count: number
-  competitor_source_count: number
-  third_party_sources: number
-  brand_percentage: number
-  competitor_percentage: number
-  third_party_percentage: number
+export interface CitationBreakdown {
+  count: number;
+  total: number;
+  percentage: number;
 }
+
+export interface CitationResult {
+  totalCitations: number;
+  ownBrandCitation: CitationBreakdown;
+  thirdPartyCitation: CitationBreakdown;
+  competitorCitation: CitationBreakdown;
+}
+
 
 export type ChartEntry = {
   period: string
@@ -103,16 +109,16 @@ export type ChartEntry = {
 }
 
 export function mapCitationToChartEntries(
-  citations: CitationEntry[],
+  citation: CitationResult | null,
 ): ChartEntry[] {
-  return citations.map((citation) => ({
-    period: citation.period,
-    brand_percentage: citation.brand_percentage,
-    competitor_percentage: citation.competitor_percentage,
-    third_party_percentage: citation.third_party_percentage,
-    total_responses: citation.total_responses,
+  return [{
+    period: Date.now().toString(),
+    brand_percentage: citation?.ownBrandCitation?.percentage || 0,
+    competitor_percentage: citation?.competitorCitation?.percentage || 0,
+    third_party_percentage: citation?.thirdPartyCitation?.percentage || 0,
+    total_responses: citation?.totalCitations || 0,
     // Add any additional fields you want to expose for charts
-  }))
+  }]
 }
 
 export function mapPresenceToChartEntries(
@@ -137,7 +143,7 @@ export function mapPositionToChartEntries(
     middle: position.middle,
     bottom: position.bottom,
     total: position.total,
-    missing:position.missing || 0
+    missing: position.missing || 0,
     // Add any additional fields you want to expose for charts
   }))
 }
@@ -192,12 +198,12 @@ export async function fetchDashboardOverview(
 
 export async function fetchOverallPresence(
   projectId: string,
-  dateRange: DateRange,
+  filters: PromptFilters,
 ): Promise<PresenceApiResponse | null> {
   try {
     const params: Record<string, string> = {}
-    if (dateRange.startDate) params['startDate'] = dateRange.startDate
-    if (dateRange.endDate) params['endDate'] = dateRange.endDate
+    if (filters.startDate) params['startDate'] = filters.startDate
+    if (filters.endDate) params['endDate'] = filters.endDate
     params['contextId'] = projectId
 
     const response = await api.get(`/api/PresenceSummary/overall`, {
@@ -253,14 +259,14 @@ export async function fetchPresence(
 
 export async function fetchCitations(
   projectId: string,
-  dateRange?: DateRange,
-): Promise<CitationEntry[] | null> {
+  filters?: PromptFilters,
+): Promise<CitationResult | null> {
   try {
     const params: Record<string, string> = {}
+    const dateRange = { startDate:filters?.startDate, endDate: filters?.endDate}
     if (dateRange?.startDate) params['startDate'] = dateRange.startDate
     if (dateRange?.endDate) params['endDate'] = dateRange.endDate
-
-    const response = await api.get(`/citations/${projectId}`, {
+    const response = await api.get(`/api/Citation/context/${projectId}/stats-by-source`, {
       params,
       headers: getAuthHeaders(),
     })

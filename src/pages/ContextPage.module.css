@@ -1,29 +1,115 @@
 .contextWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
-  min-height: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #31374d;
-  box-sizing: border-box;
-  padding: 32px 24px;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .heading {
-  font-weight: 600;
-  font-size: 1.8rem;
-  margin-bottom: 0.8rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2b2154;
+  margin: 0;
 }
 
+.tabsContainer {
+  background: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
 
-@media (max-width: 980px) {
+.tabsList {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e0e0e0;
+  background: transparent;
+}
+
+.tab {
+  padding: 1rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #75658c;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #666666;
+}
+
+.tabActive {
+  color: #2b2154;
+  background: transparent;
+  border-bottom-color: #2b2154;
+}
+
+.tabActive:hover {
+  color: #2b2154;
+}
+
+.tabContent {
+  padding: 2rem;
+  min-height: 400px;
+}
+
+button:focus-visible {
+  outline: none;
+}
+
+.nextBtn {
+  background: rgb(102,85,155);
+  color: #fff;
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.01rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s;
+  margin-top: 2em;
+  width: 100%;
+}
+
+.nextBtn:disabled {
+  background: #b3c6f5;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .contextWrapper {
-    padding: 2rem 1.6rem;
+    padding: 1rem;
   }
-  .headerRow {
-    font-size: 1.95rem;
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
- 
+
+  .tabsList {
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    flex: 1 1 50%;
+    min-width: 120px;
+  }
+
+  .tabContent {
+    padding: 1.5rem;
+  }
 }
