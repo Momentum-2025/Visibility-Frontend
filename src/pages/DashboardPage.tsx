@@ -6,10 +6,10 @@ import {
   // fetchDashboardOverview,
   fetchOverallPresence,
   // fetchCitations,
-  mapPresenceToChartEntries,
-  type PositionEntry,
+  mapDashboardPresenceToChartEntries,
+  // type PositionEntry,
   // fetchPosition,
-  mapPositionToChartEntries,
+  // mapPositionToChartEntries,
   type PresenceApiResponse,
   convertDayWiseToChartData,
   fetchCitations,
@@ -26,13 +26,16 @@ import { GenericLineChart } from '../components/diagram/GenericLineChart'
 import { usePromptFilters } from '../hooks/useFilters'
 import { FilterModal } from '../components/filter/FilterModal'
 import { useNavigate } from 'react-router-dom'
+import Platforms from '../components/filter/Platforms'
 
 export default function DashboardPage() {
   // const [stats, setStats] = useState<DashboardOverview | null>(null)
   const [overallPresence, setOverallPresence] =
     useState<PresenceApiResponse | null>(null)
-  const [citationsArray, setCitationArray] = useState<CitationResult | null>(null)
-  const [positionData, setPositionData] = useState<PositionEntry[]>([])
+  const [citationsArray, setCitationArray] = useState<CitationResult | null>(
+    null,
+  )
+  // const [positionData, setPositionData] = useState<PositionEntry[]>([])
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -69,7 +72,7 @@ export default function DashboardPage() {
       // fetchDashboardOverview(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
       fetchOverallPresence(currentProjectId ?? '', filters),
       fetchCitations(currentProjectId ?? '', filters),
-      [],
+      // [],
       // fetchPresence(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
       // fetchPosition(currentProjectId ?? '', DASHBOARD_DATE_RANGE),
     ])
@@ -79,14 +82,14 @@ export default function DashboardPage() {
           competitorPresence,
           citations,
           // brandPresence,
-          positionData,
+          // positionData,
         ]) => {
           if (!cancelled) {
             // setStats(overview)
             setOverallPresence(competitorPresence)
             setCitationArray(citations || null)
             // setPresenceData(brandPresence || [])
-            setPositionData(positionData || [])
+            // setPositionData(positionData || [])
             if (donutsRef.current) donutsRef.current.scrollLeft = 0
           }
         },
@@ -259,19 +262,9 @@ export default function DashboardPage() {
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Platforms</div>
             <div className={styles.platforms}>
-              {/* {platforms?.map((p, i) => ( */}
-              <span key={0} className={styles.platformIcon}>
-                {/* {'logoUrl' ? ( */}
-                <img
-                  src={'logoUrl'}
-                  alt={'0'}
-                  className={styles.platformLogo}
-                />
-                {/* ) : ( */}
-                {/* p.id */}
-                {/* )} */}
-              </span>
-              {/* ))} */}
+              <Platforms
+                onClick={(key) => updateFilters({ platforms: [key] })}
+              />
             </div>
           </div>
         </div>
@@ -301,9 +294,16 @@ export default function DashboardPage() {
 
         <section className={styles.metricTiles}>
           <PieCard
-            data={mapPresenceToChartEntries(
+            data={mapDashboardPresenceToChartEntries(
               overallPresence?.dayWisePresence || [],
             )} // your array of CitationEntry
+            averagesData={
+              {
+                present_percentage: overallPresence?.ownPresencePercentage,
+                not_present:
+                  100 - (overallPresence?.ownPresencePercentage || 0),
+              } as Record<string, number>
+            }
             keys={['present_percentage', 'not_present']}
             labels={['Present', 'Not Present']}
             colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
@@ -314,6 +314,16 @@ export default function DashboardPage() {
 
           <PieCard
             data={mapCitationToChartEntries(citationsArray)} // your array of CitationEntry
+            averagesData={
+              {
+                brand_percentage:
+                  citationsArray?.ownBrandCitation.percentage || 0,
+                competitor_percentage:
+                  citationsArray?.competitorCitation.percentage || 0,
+                third_party_percentage:
+                  citationsArray?.thirdPartyCitation.percentage || 0,
+              } as Record<string, number>
+            }
             keys={[
               'brand_percentage',
               'competitor_percentage',
@@ -326,7 +336,7 @@ export default function DashboardPage() {
             tooltipInfo="Percent of sources over period"
           />
 
-          <PieCard
+          {/* <PieCard
             data={mapPositionToChartEntries(positionData)} // your array of CitationEntry
             keys={['top', 'middle', 'bottom', 'missing']}
             labels={['Top', 'Middle', 'Bottom', 'Missing']}
@@ -334,7 +344,7 @@ export default function DashboardPage() {
             totalKey="top"
             title="Position"
             tooltipInfo="Position of brand over period"
-          />
+          /> */}
         </section>
         {/* Add additional sections such as presence pie, position donut, etc. as needed */}
         {loading && <div className={styles.loading}>Loading...</div>}

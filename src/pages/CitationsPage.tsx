@@ -12,7 +12,7 @@ import styles from './CitationsPage.module.css'
 import { usePromptFilters } from '../hooks/useFilters'
 import { FilterModal } from '../components/filter/FilterModal'
 import {
-    convertTopDomainsToChartData,
+  convertTopDomainsToChartData,
   fetchDomainWise,
   type CitationStatsResponse,
 } from '../services/citationsDataService'
@@ -164,6 +164,16 @@ export default function CitationsPage() {
         <section className={styles.metricTiles}>
           <PieCard
             data={mapCitationToChartEntries(citationsArray)} // your array of CitationEntry
+            averagesData={
+              {
+                brand_percentage:
+                  citationsArray?.ownBrandCitation.percentage || 0,
+                competitor_percentage:
+                  citationsArray?.competitorCitation.percentage || 0,
+                third_party_percentage:
+                  citationsArray?.thirdPartyCitation.percentage || 0,
+              } as Record<string, number>
+            }
             keys={[
               'brand_percentage',
               'competitor_percentage',
@@ -178,9 +188,7 @@ export default function CitationsPage() {
 
           <GenericLineChart
             title="Top Domains (% of total)"
-            data={convertTopDomainsToChartData(
-              []
-            )}
+            data={convertTopDomainsToChartData([])}
             xKey="date"
             xFormatter={(d: any) => d}
             yFormatter={(v: any) => `${v}%`}
@@ -188,7 +196,7 @@ export default function CitationsPage() {
               .map((o) => ({
                 dataKey: o.domain,
                 label: o.domain,
-                color: stringToColor(o.domain),
+                color: stringToColor(o.domain+'123'),
                 overallPercentage: o.percentage,
               }))
               .sort((a, b) => b.overallPercentage - a.overallPercentage)

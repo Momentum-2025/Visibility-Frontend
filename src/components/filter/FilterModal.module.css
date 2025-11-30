@@ -54,12 +54,13 @@
   justify-content: space-between;
   padding: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
+  background-color: #2b1256;
 }
 
 .title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: #ffffff;
   margin: 0;
 }
 
@@ -107,7 +108,7 @@
 
 .input,
 .select {
-  width: 100%;
+  width: 90%;
   padding: 0.5rem 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -215,10 +216,10 @@
 }
 
 .applyBtn {
-  background-color: #3b82f6;
+  background-color: #2b1256;
   color: white;
 }
 
 .applyBtn:hover {
-  background-color: #2563eb;
+  background-color: #55506ffc;
 }

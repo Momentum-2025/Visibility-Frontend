@@ -169,30 +169,6 @@
   margin-bottom: 2px;
 }
 
-.platforms {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.platformIcon {
-  display: flex;
-  align-items: center;
-  background: #f7faff;
-  border-radius: 5px;
-  padding: 5px;
-  min-width: 30px;
-  min-height: 30px;
-  justify-content: center;
-}
-
-.platformLogo {
-  height: 24px;
-  width: 24px;
-  object-fit: contain;
-  display: block;
-}
-
 .compPresenceSection {
   margin-bottom: 32px;
 }

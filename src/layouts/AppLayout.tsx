@@ -58,13 +58,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <button className={styles.logout} onClick={handleLogout}>
                 Log out
               </button>
-              <button
-                onClick={() => setShowModal(true)}
-                className={styles.profile}
-              >
-                <div className={styles.avatar}>{(user?.email ?? 'U')[0]}</div>
-                <span>{user?.email}</span>
-              </button>
+              <div >
+                <button
+                  onClick={() => setShowModal(true)}
+                  className={styles.profile}
+                >
+                  <div className={styles.avatar}>{(user?.email ?? 'U')[0]}</div>
+                  <span>{user?.email}</span>
+                </button>
+              </div>
             </div>
           </nav>
 

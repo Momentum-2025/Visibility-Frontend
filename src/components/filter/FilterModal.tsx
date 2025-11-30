@@ -49,7 +49,10 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                 className={styles.input}
                 value={localFilters.startDate || currentFilters.startDate}
                 onChange={(e) =>
-                  setLocalFilters({ ...localFilters, startDate: e.target.value })
+                  setLocalFilters({
+                    ...localFilters,
+                    startDate: e.target.value,
+                  })
                 }
               />
               <span className={styles.dateSeparator}>to</span>
@@ -65,7 +68,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           </div>
 
           {/* Branded Filter */}
-          <div className={styles.filterGroup}>
+          {/* <div className={styles.filterGroup}>
             <label className={styles.label}>Prompt Type</label>
             <div className={styles.radioGroup}>
               <label className={styles.radioLabel}>
@@ -73,7 +76,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                   type="radio"
                   name="branded"
                   checked={
-                    (localFilters.branded ?? currentFilters.branded) === undefined
+                    (localFilters.branded ?? currentFilters.branded) ===
+                    undefined
                   }
                   onChange={() =>
                     setLocalFilters({ ...localFilters, branded: undefined })
@@ -108,28 +112,26 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                 Branded only
               </label>
             </div>
-          </div>
+          </div> */}
 
           {/* Platforms Filter */}
           <div className={styles.filterGroup}>
             <label className={styles.label}>Platforms</label>
             <div className={styles.checkboxGroup}>
-              {['ChatGPT', 'Claude', 'Gemini', 'Perplexity'].map((platform) => (
+              {['openai', 'google', 'perplexity'].map((platform) => (
                 <label key={platform} className={styles.checkboxLabel}>
                   <input
                     type="checkbox"
-                    checked={(
-                      localFilters.platforms || currentFilters.platforms
-                    ).includes(platform)}
+                    checked={
+                      (localFilters.platforms ||
+                        currentFilters.platforms)[0] === platform
+                    }
                     onChange={(e) => {
-                      const current =
-                        localFilters.platforms || currentFilters.platforms
-                      const updated = e.target.checked
-                        ? [...current, platform]
-                        : current.filter((p) => p !== platform)
+                      const updated = e.target.checked ? [platform] : []
                       setLocalFilters({ ...localFilters, platforms: updated })
                     }}
                   />
+
                   {platform}
                 </label>
               ))}
@@ -155,7 +157,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           </div>
 
           {/* Sort Filter */}
-          <div className={styles.filterGroup}>
+          {/* <div className={styles.filterGroup}>
             <label className={styles.label}>Sort By</label>
             <div className={styles.sortInputs}>
               <select
@@ -185,7 +187,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                 <option value="asc">Ascending</option>
               </select>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.footer}>

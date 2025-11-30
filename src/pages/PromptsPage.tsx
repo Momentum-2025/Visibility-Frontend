@@ -7,6 +7,7 @@ import {
   mapPresenceToChartEntries,
   type PromptDisplayData,
 } from '../services/PromptDataModels'
+import { mapDashboardPresenceToChartEntries } from '../services/dashboardService'
 import { fetchPromptPageData } from '../services/promptDataService'
 import { useProject } from '../contexts/ProjectContext'
 import PromptDataTable from '../components/prompt/PromptTagWiseTable'
@@ -17,10 +18,16 @@ import { PieCard } from '../components/diagram/PieCard'
 import { Plus } from 'lucide-react'
 import AddPromptModal from '../components/prompt/AddPromptModal'
 import { useNavigate } from 'react-router-dom'
+import {
+  fetchCitations,
+  fetchOverallPresence,
+  mapCitationToChartEntries,
+  type CitationResult,
+  type PresenceApiResponse,
+} from '../services/dashboardService'
+import Platforms from '../components/filter/Platforms'
 
 export default function PromptsPage() {
-  
-
   const { currentProjectId } = useProject()
   const {
     filters,
@@ -39,28 +46,36 @@ export default function PromptsPage() {
   // const [obsError, setObsError] = useState<string | null>(null)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [isAddPromptModalOpen, setIsAddPromptModalOpen] = useState(false)
-
-  const navigate = useNavigate();
+  const [overallPresence, setOverallPresence] =
+    useState<PresenceApiResponse | null>(null)
+  const [citationsArray, setCitationArray] = useState<CitationResult | null>(
+    null,
+  )
+  const navigate = useNavigate()
   console.log(currentProjectId)
-  if(!currentProjectId || currentProjectId == '')
-  {
+  if (!currentProjectId || currentProjectId == '') {
     navigate('/context?isSignup=true')
   }
   // Fetch data when filters or project changes
   useEffect(() => {
-    if(isAddPromptModalOpen)
-    {
-      return;
+    if (isAddPromptModalOpen) {
+      return
     }
-    
+
     let cancelled = false
     setLoading(true)
     setError(null)
 
-    Promise.all([fetchPromptPageData(currentProjectId ?? '', filters)])
-      .then(([promptData]) => {
+    Promise.all([
+      fetchPromptPageData(currentProjectId ?? '', filters),
+      fetchOverallPresence(currentProjectId ?? '', filters),
+      fetchCitations(currentProjectId ?? '', filters),
+    ])
+      .then(([promptData, overallPresence, citations]) => {
         if (!cancelled) {
           setPromptData(promptData)
+          setOverallPresence(overallPresence)
+          setCitationArray(citations)
         }
       })
       .catch(() => {
@@ -208,49 +223,27 @@ export default function PromptsPage() {
             </div>
             <div className={styles.statCard}>
               <div className={styles.statLabel}>Platforms</div>
-              <div className={styles.platforms}>
-                <span key={0} className={styles.platformIcon}>
-                  <img
-                    src={'logoUrl'}
-                    alt={'0'}
-                    className={styles.platformLogo}
-                  />
-                </span>
-              </div>
+              <Platforms
+                onClick={(key) => updateFilters({ platforms: [key] })}
+              />
             </div>
           </div>
         )}
 
-        {promptData?.isTagSpecificData && (
+        {promptData?.isTagWiseData && (
           <>
-            <section className={styles.metricTiles}>
-              <div>
-                <PieCard
-                  data={mapPresenceToChartEntries(
-                    promptData?.tagSpecificData.tagWiseDayWisePresence || [],
-                  )} // your array of CitationEntry
-                  keys={['present_percentage', 'not_present']}
-                  labels={['Present', 'Not Present']}
-                  colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
-                  totalKey="present_percentage"
-                  title="Presence"
-                  tooltipInfo="Percent of Brand Presence over period"
-                />
-              </div>
-            </section>
-          </>
-        )}
-
-        {promptData?.isPromptSpecificData && (
-          <>
-            <h2 className={styles.subHeading}>
-              {promptData.promptSpecificData.promptText}
-            </h2>
             <section className={styles.metricTiles}>
               <PieCard
-                data={mapPresenceToChartEntries(
-                  promptData?.promptSpecificData.dailyResponseData || [],
+                data={mapDashboardPresenceToChartEntries(
+                  overallPresence?.dayWisePresence || [],
                 )} // your array of CitationEntry
+                averagesData={
+                  {
+                    present_percentage: overallPresence?.ownPresencePercentage,
+                    not_present:
+                      100 - (overallPresence?.ownPresencePercentage || 0),
+                  } as Record<string, number>
+                }
                 keys={['present_percentage', 'not_present']}
                 labels={['Present', 'Not Present']}
                 colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
@@ -258,6 +251,122 @@ export default function PromptsPage() {
                 title="Presence"
                 tooltipInfo="Percent of Brand Presence over period"
               />
+
+              <PieCard
+                data={mapCitationToChartEntries(citationsArray)} // your array of CitationEntry
+                averagesData={
+                  {
+                    brand_percentage:
+                      citationsArray?.ownBrandCitation.percentage || 0,
+                    competitor_percentage:
+                      citationsArray?.competitorCitation.percentage || 0,
+                    third_party_percentage:
+                      citationsArray?.thirdPartyCitation.percentage || 0,
+                  } as Record<string, number>
+                }
+                keys={[
+                  'brand_percentage',
+                  'competitor_percentage',
+                  'third_party_percentage',
+                ]}
+                labels={['Brand', 'Competitor', 'Third Party']}
+                colors={['#fdba74', 'rgb(102,85,155)', '#fd7474ff']}
+                totalKey="brand_percentage"
+                title="Citations"
+                tooltipInfo="Percent of sources over period"
+              />
+            </section>
+          </>
+        )}
+
+        {promptData?.isTagSpecificData && (
+          <section className={styles.metricTiles}>
+            <PieCard
+              data={mapPresenceToChartEntries(
+                promptData?.tagSpecificData.tagWiseDayWisePresence || [],
+              )} // your array of CitationEntry
+              averagesData={undefined}
+              keys={['present_percentage', 'not_present']}
+              labels={['Present', 'Not Present']}
+              colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
+              totalKey="present_percentage"
+              title="Presence"
+              tooltipInfo="Percent of Brand Presence over period"
+            />
+
+            <PieCard
+              data={mapCitationToChartEntries(citationsArray)} // your array of CitationEntry
+              averagesData={
+                {
+                  brand_percentage:
+                    citationsArray?.ownBrandCitation.percentage || 0,
+                  competitor_percentage:
+                    citationsArray?.competitorCitation.percentage || 0,
+                  third_party_percentage:
+                    citationsArray?.thirdPartyCitation.percentage || 0,
+                } as Record<string, number>
+              }
+              keys={[
+                'brand_percentage',
+                'competitor_percentage',
+                'third_party_percentage',
+              ]}
+              labels={['Brand', 'Competitor', 'Third Party']}
+              colors={['#fdba74', 'rgb(102,85,155)', '#fd7474ff']}
+              totalKey="brand_percentage"
+              title="Citations"
+              tooltipInfo="Percent of sources over period"
+            />
+          </section>
+        )}
+
+        {promptData?.isPromptSpecificData && (
+          <>
+            <div className={styles.promptHeadingSpaced}>
+              <h5>Prompt</h5>
+              <h2 className={styles.promptSubHeading}>
+                {promptData.promptSpecificData.promptText}
+              </h2>
+            </div>
+
+            <section className={styles.metricTiles}>
+              <PieCard
+                data={mapPresenceToChartEntries(
+                  promptData?.promptSpecificData.dailyResponseData || [],
+                )} // your array of CitationEntry
+                averagesData={undefined}
+                keys={['present_percentage', 'not_present']}
+                labels={['Present', 'Not Present']}
+                colors={['#fdba74', 'rgb(102,85,155)', '#6B7280']}
+                totalKey="present_percentage"
+                title="Presence"
+                tooltipInfo="Percent of Brand Presence over period"
+              />
+
+              <PieCard
+                data={mapCitationToChartEntries(citationsArray)} // your array of CitationEntry
+                averagesData={
+                  {
+                    brand_percentage:
+                      citationsArray?.ownBrandCitation.percentage || 0,
+                    competitor_percentage:
+                      citationsArray?.competitorCitation.percentage || 0,
+                    third_party_percentage:
+                      citationsArray?.thirdPartyCitation.percentage || 0,
+                  } as Record<string, number>
+                }
+                keys={[
+                  'brand_percentage',
+                  'competitor_percentage',
+                  'third_party_percentage',
+                ]}
+                labels={['Brand', 'Competitor', 'Third Party']}
+                colors={['#fdba74', 'rgb(102,85,155)', '#fd7474ff']}
+                totalKey="brand_percentage"
+                title="Citations"
+                tooltipInfo="Percent of sources over period"
+              />
+
               {/* <GenericLineChart
                 title="Tag Presence (% of total)"
                 data={(

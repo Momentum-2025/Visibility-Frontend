@@ -100,6 +100,7 @@ export interface CitationResult {
   ownBrandCitation: CitationBreakdown;
   thirdPartyCitation: CitationBreakdown;
   competitorCitation: CitationBreakdown;
+  dayWiseOwnBrandData:{date:string,percentage:number}[]
 }
 
 
@@ -111,17 +112,13 @@ export type ChartEntry = {
 export function mapCitationToChartEntries(
   citation: CitationResult | null,
 ): ChartEntry[] {
-  return [{
-    period: Date.now().toString(),
-    brand_percentage: citation?.ownBrandCitation?.percentage || 0,
-    competitor_percentage: citation?.competitorCitation?.percentage || 0,
-    third_party_percentage: citation?.thirdPartyCitation?.percentage || 0,
-    total_responses: citation?.totalCitations || 0,
-    // Add any additional fields you want to expose for charts
-  }]
+  return citation?.dayWiseOwnBrandData.map((citation) =>({
+    period: citation?.date,
+    brand_percentage: citation?.percentage.toString(),
+  })) || [];
 }
 
-export function mapPresenceToChartEntries(
+export function mapDashboardPresenceToChartEntries(
   presenceData: DayWisePresence[],
 ): ChartEntry[] {
   return presenceData.map((presence) => ({
@@ -262,11 +259,15 @@ export async function fetchCitations(
   filters?: PromptFilters,
 ): Promise<CitationResult | null> {
   try {
-    const params: Record<string, string> = {}
+    const params: Record<string, unknown> = {}
     const dateRange = { startDate:filters?.startDate, endDate: filters?.endDate}
     if (dateRange?.startDate) params['startDate'] = dateRange.startDate
     if (dateRange?.endDate) params['endDate'] = dateRange.endDate
-    const response = await api.get(`/api/Citation/context/${projectId}/stats-by-source`, {
+    params['tag'] = filters?.tags[0]
+    params['platform'] = filters?.platforms[0]
+    if(filters?.promptId) params['promptId'] = filters?.promptId
+
+    const response = await api.get(`/api/Citation/context/${projectId}/stats`, {
       params,
       headers: getAuthHeaders(),
     })

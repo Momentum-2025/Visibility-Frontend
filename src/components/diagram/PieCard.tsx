@@ -6,6 +6,7 @@ import styles from './PieCard.module.css' // Add your CSS styling here
 
 export function PieCard({
   data,
+  averagesData = undefined,
   keys,
   labels,
   colors,
@@ -16,7 +17,7 @@ export function PieCard({
   if (data.length == 0) return
 
   // Compute averages as an object mapping {key: average}
-  const averagesMap = keys.reduce<Record<string, number>>((result, key) => {
+  const averagesMap = averagesData ?? keys.reduce<Record<string, number>>((result, key) => {
     const sum = data.reduce((acc, entry) => acc + (Number(entry[key]) || 0), 0)
     result[key] = data.length ? Number((sum / data.length).toFixed(2)) : 0
     return result
@@ -36,10 +37,10 @@ export function PieCard({
   }
 
   // Pie value for the center
-  const pieTotal = keys.reduce(
-    (sum, key) => sum + (Number(averagesMap[key]) || 0),
-    0,
-  )
+  // const pieTotal = keys.reduce(
+  //   (sum, key) => sum + (Number(averagesMap[key]) || 0),
+  //   0,
+  // )
 
   // Miniline data (trends by totalKey over time)
   const lineData = {
@@ -164,6 +165,7 @@ type ChartEntry = {
 
 type PieCardProps = {
   data: ChartEntry[] // The full series for the period
+  averagesData: Record<string,number> | undefined
   keys: string[] // e.g. ['brand_percentage', 'competitor_percentage', ...]
   labels: string[] // Human-readable labels for each key
   colors: string[] // Array of HEX color strings for each key

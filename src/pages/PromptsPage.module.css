@@ -279,3 +279,55 @@
 .addPromptBtn:active {
   transform: scale(0.95);
 }
+
+/* Add these styles to your module.css file */
+
+.promptHeading {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.promptHeading h5 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+.promptSubHeading {
+  /* font-size: 0.5em;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0; */
+  /* letter-spacing: -0.3px; */
+}
+
+/* Alternative with more spacing */
+.promptHeadingSpaced {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 12px;
+  border-left: 4px solid #2b2154;
+}
+
+.promptHeadingSpaced h5 {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2b2154;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 5px 0;
+}
+
+.promptHeadingSpaced .promptSubHeading {
+  font-size: 1em;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.3;
+  margin: 0;
+}

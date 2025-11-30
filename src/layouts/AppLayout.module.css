@@ -192,7 +192,7 @@
 
 .logout {
   padding: 12px 0;
-  color: #ef4444;
+  color: #66559b;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -206,8 +206,8 @@
 }
 
 .logout:hover {
-  color: #dc2626;
-  background-color: #fef2f2;
+  color: #66559b;
+  background-color: #fbf2fe;
 }
 
 .logout::before {
@@ -219,7 +219,7 @@
   align-items: center;
   justify-content: center;
   transform: rotate(180deg);
-  background-color: #ef4444;
+  background-color: #66559b;
   color: white;
   border-radius: 50%;
   font-size: 12px;
@@ -231,6 +231,8 @@
   padding: 16px 0;
   margin-top: 8px;
   gap: 10px;
+  background-color: #ffffff;
+  border: none;
 }
 
 .avatar {
