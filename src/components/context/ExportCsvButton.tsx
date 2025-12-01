@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { exportContextData } from '../../services/fileService'
 import styles from './ExportSection.module.css'
 

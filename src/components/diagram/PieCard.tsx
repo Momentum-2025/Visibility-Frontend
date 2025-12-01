@@ -83,7 +83,7 @@ export function PieCard({
     <div className={styles.PieCard}>
       <div className={styles.titleRow}>
         <span className={styles.title}>{title}</span>
-        {/* {tooltipInfo && <span className={styles.infoIcon}>i</span>} */}
+        {tooltipInfo && <span className={styles.infoIcon}>i</span>}
         <span className={styles.subtitle}>(% of total)</span>
       </div>
       <div className={styles.contentRow}>

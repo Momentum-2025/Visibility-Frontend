@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, User, Shield,
     // Mail, Building, Key, Bell, 
     // Trash2 

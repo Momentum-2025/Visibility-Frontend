@@ -94,8 +94,8 @@ const AuthFlow: React.FC = () => {
 
       // Send authorization code to your backend
       try {
-        const response = await googleLogin(code)
-        // if (response) {
+        // const response = 
+        await googleLogin(code)
         // Clean up
         sessionStorage.removeItem('google_oauth_state')
         window.history.replaceState(

@@ -14,7 +14,7 @@ const AddPromptModal = ({ isOpen, onClose }: AddPromptProps) => {
   const [promptText, setPromptText] = useState('')
   const [tags, setTags] = useState('')
   // const [platform, setPlatform] = useState('')
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<any>(null)
   const [isUploading, setIsUploading] = useState(false)
   const { currentProjectId } = useProject()
 
@@ -291,7 +291,7 @@ const AddPromptModal = ({ isOpen, onClose }: AddPromptProps) => {
                 <input
                   type="file"
                   accept=".csv,.xlsx"
-                  onChange={handleFileChange}
+                  onChange={() => handleFileChange}
                   style={{ display: 'none' }}
                   id="file-upload"
                 />

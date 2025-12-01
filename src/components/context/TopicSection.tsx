@@ -17,8 +17,8 @@ export default function TopicSection() {
 
   useEffect(() => {
     if (currentProjectId)
-      loadAllContextInfo(currentProjectId ?? '').then((data) => {
-        if(data) setTopics(data[0]?.keyTopics)
+      loadAllContextInfo().then((data) => {
+        if(data) setTopics(data.filter(o => o.id == currentProjectId)[0].keyTopics)
       })
     setLoading(false)
   }, [currentProjectId])
