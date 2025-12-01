@@ -87,7 +87,7 @@ export async function fetchPromptPageData(
   if (filters.promptId) {
     result.isPromptSpecificData = true
     result.promptSpecificData = await fetchPromptSpecificPromptStats(
-      projectId,
+      // projectId,
       filters.promptId,
       filters.platforms[0],
       {
@@ -172,7 +172,7 @@ export async function fetchTagSpecificPromptStats(
 }
 
 export async function fetchPromptSpecificPromptStats(
-  projectId: string,
+  // projectId: string,
   promptId: string,
   platform:string,
   dateRange?: DateRange,

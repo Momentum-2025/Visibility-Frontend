@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowRight, BarChart3, Brain, Target, Zap, CheckCircle, TrendingUp, Eye } from 'lucide-react';
 
 export default function LandingPage() {
