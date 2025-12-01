@@ -65,6 +65,13 @@ export interface TagAnalysisResponse {
   tagWiseDayWisePresence: DayWisePresence[];
 }
 
+export interface PromptWiseData
+{
+  platform:string,
+  totalResponses: number,
+  ownPresenceCount: number,
+  ownPresencePercentage: number,
+}
 
 export function mapPresenceToChartEntries(
   presenceData: DayWisePresence[],

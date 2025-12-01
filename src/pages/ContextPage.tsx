@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import BrandInfoSection from '../components/context/BrandInfoSection'
 import PersonaSection from '../components/context/PersonaSection'
 import CompetitorSection from '../components/context/CompetitorSection'
