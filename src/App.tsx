@@ -17,6 +17,7 @@ function App() {
   return (
     <ProjectProvider>
       <AuthProvider>
+    
         <BrowserRouter>
           <Routes>
             <Route element={<RequireAuth />}>

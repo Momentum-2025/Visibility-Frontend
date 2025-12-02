@@ -1,0 +1,75 @@
+# Build and deploy a React app to GitHub Pages.
+# Triggers:
+#  - push to `main` (change branches under `on.push` if needed)
+#  - manual run (workflow_dispatch) with inputs to choose token type and publish dir
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main                # change to your default branch if needed
+  workflow_dispatch:
+    inputs:
+      token:
+        description: 'Which token to use for deployment: "github_token" (default) or "pat"'
+        required: true
+        default: 'github_token'
+      pat_secret:
+        description: 'Repository secret name that contains the PAT (used when token="pat"). Default: PAGES_PAT'
+        required: false
+        default: 'PAGES_PAT'
+      publish_dir:
+        description: 'Directory to publish (for CRA use "build", for Vite use "dist")'
+        required: true
+        default: 'build'
+      node_version:
+        description: 'Node.js version to use when building'
+        required: false
+        default: '18'
+
+# Ensure the workflow has permission to write repository contents and Pages
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Use the workflow_dispatch input when present, otherwise fall back to defaults
+      PUBLISH_DIR: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_dir) || 'build' }}
+      NODE_VERSION: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.node_version) || '18' }}
+      PAT_SECRET_NAME: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.pat_secret) || 'PAGES_PAT' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Deploy using the built-in GITHUB_TOKEN (default for pushes and manual runs that choose github_token)
+      - name: Deploy to gh-pages (using GITHUB_TOKEN)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.token == 'github_token' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
+
+      # Deploy using a Personal Access Token (only for manual runs that choose token=pat)
+      # NOTE: This step uses a secret named PAGES_PAT by default. If you use a different secret name,
+      # edit both the workflow and set the repository secret accordingly.
+      - name: Deploy to gh-pages (using PAT)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.token == 'pat' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.PAGES_PAT }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
