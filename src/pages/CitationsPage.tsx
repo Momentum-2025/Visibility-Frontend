@@ -18,6 +18,7 @@ import {
 } from '../services/citationsDataService'
 import PromptDataTable from '../components/prompt/PromptTagWiseTable'
 import { GenericLineChart } from '../components/diagram/GenericLineChart'
+import { APP_NAME } from '../utils/common'
 
 export default function CitationsPage() {
   const { currentProjectId } = useProject()
@@ -47,6 +48,7 @@ export default function CitationsPage() {
   }
 
   useEffect(() => {
+    document.title = `Citations | ${APP_NAME}`
     let cancelled = false
     setLoading(true)
     setError(null)

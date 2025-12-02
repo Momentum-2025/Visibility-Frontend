@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './NoAuthLayout.module.css'
+import { APP_NAME } from '../utils/common'
 
-export default function NoAuthLayout({ children }: { children: React.ReactNode }) {
+export default function NoAuthLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  useEffect(() => {
+    document.title = APP_NAME
+  }, [])
+
   return (
     <div className={styles.layout}>
       <div className={styles.sidebar}>
@@ -10,18 +19,28 @@ export default function NoAuthLayout({ children }: { children: React.ReactNode }
           <div className={styles.logoSection}>
             <div className={styles.logoIcon}>
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
-                <path d="M24 8 L24 24 L36 24" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                <circle cx="24" cy="24" r="3" fill="currentColor"/>
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  opacity="0.3"
+                />
+                <path
+                  d="M24 8 L24 24 L36 24"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+                <circle cx="24" cy="24" r="3" fill="currentColor" />
               </svg>
             </div>
             <h1 className={styles.heading}>Visibility AI</h1>
           </div>
-          
+
           <div className={styles.taglineSection}>
-            <h2 className={styles.mainTagline}>
-              Be Found Where It Matters
-            </h2>
+            <h2 className={styles.mainTagline}>Be Found Where It Matters</h2>
             <p className={styles.subTagline}>
               Optimize your brand's presence in AI-powered search results
             </p>
@@ -32,14 +51,19 @@ export default function NoAuthLayout({ children }: { children: React.ReactNode }
               <div className={styles.featureIcon}>🎯</div>
               <div className={styles.featureText}>
                 <h3>AI Result Analytics</h3>
-                <p>Track how your products appear in ChatGPT, Perplexity, and more</p>
+                <p>
+                  Track how your products appear in ChatGPT, Perplexity, and
+                  more
+                </p>
               </div>
             </div>
             <div className={styles.feature}>
               <div className={styles.featureIcon}>📊</div>
               <div className={styles.featureText}>
                 <h3>Visibility Insights</h3>
-                <p>Get actionable recommendations to improve your AI presence</p>
+                <p>
+                  Get actionable recommendations to improve your AI presence
+                </p>
               </div>
             </div>
             <div className={styles.feature}>
@@ -54,7 +78,9 @@ export default function NoAuthLayout({ children }: { children: React.ReactNode }
           <div className={styles.statsSection}>
             <div className={styles.stat}>
               <div className={styles.statNumber}>67%</div>
-              <div className={styles.statLabel}>Of users trust AI recommendations</div>
+              <div className={styles.statLabel}>
+                Of users trust AI recommendations
+              </div>
             </div>
             <div className={styles.stat}>
               <div className={styles.statNumber}>3.2B</div>

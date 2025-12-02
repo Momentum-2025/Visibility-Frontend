@@ -1,3 +1,4 @@
+export const APP_NAME = "Visibility"
 
 export interface Platform {
   id: "openai" | "gemini" | "perplexity";

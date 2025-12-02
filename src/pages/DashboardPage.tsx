@@ -27,6 +27,7 @@ import { usePromptFilters } from '../hooks/useFilters'
 import { FilterModal } from '../components/filter/FilterModal'
 import { useNavigate } from 'react-router-dom'
 import Platforms from '../components/filter/Platforms'
+import { APP_NAME } from '../utils/common'
 
 export default function DashboardPage() {
   // const [stats, setStats] = useState<DashboardOverview | null>(null)
@@ -65,6 +66,9 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
+
+    document.title = `Dashboard | ${APP_NAME}`;
+
     let cancelled = false
     setLoading(true)
     setError(null)
@@ -153,7 +157,7 @@ export default function DashboardPage() {
       <div className={styles.dashboard}>
         <div className={styles.headerRow}>
           <h1 className={styles.heading}>Dashboard</h1>
-          <button className={styles.saveBtn}>Save as PDF</button>
+          <button className={`${styles.saveBtn} print-hidden`} onClick={() => window.print()}>Save as PDF</button>
         </div>
         {/* Filter Section */}
         <div className={styles.filters}>

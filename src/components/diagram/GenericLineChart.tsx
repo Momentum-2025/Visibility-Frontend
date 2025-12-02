@@ -75,7 +75,7 @@ export function GenericLineChart<T extends Record<string, any>>({
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   padding: '12px',
                 }}
-                labelStyle={{ fontWeight: 600, marginBottom: '4px', color: '#111827' }}
+                labelStyle={{ fontWeight: 700, marginBottom: '4px', color: '#111827' }}
               />
               {series.map((s,idx) => (
                 <Line

@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './AppLayout.module.css'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import UserSwitcher from '../components/profile/UserSwitcher'
 import { TbHome, TbFileText, TbBulb, TbQuote, TbCommand } from 'react-icons/tb'
 import ManageAccountModal from '../components/profile/ManageAccountModal'
+import { APP_NAME } from '../utils/common'
 
 const navItems = [
   { label: 'Dashboard', to: '/dashboard', icon: <TbHome size={22} /> },
   { label: 'Prompts', to: '/prompts', icon: <TbFileText size={22} /> },
-  { label: 'Insights', to: '/insights', icon: <TbBulb size={22} /> },
+  // { label: 'Insights', to: '/insights', icon: <TbBulb size={22} /> },
   { label: 'Citations', to: '/citations', icon: <TbQuote size={22} /> },
   { label: 'Context', to: '/context', icon: <TbCommand size={22} /> },
 ]
@@ -25,12 +26,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const urlParams = new URLSearchParams(window.location.search)
   const isNewUser = urlParams.get('isSignup')
-
+  useEffect(() => {
+    document.title = APP_NAME
+  }, [])
+  
   return (
     <div className={styles.layout}>
       {!isNewUser && (
         <>
-          <nav className={styles.sidebar}>
+          <nav className={`${styles.sidebar} print-hidden`}>
             <NavLink to={'/dashboard'} className={styles.logo}>
               <TbBulb size={22} />
               Visibility Ai
@@ -58,7 +62,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <button className={styles.logout} onClick={handleLogout}>
                 Log out
               </button>
-              <div >
+              <div>
                 <button
                   onClick={() => setShowModal(true)}
                   className={styles.profile}

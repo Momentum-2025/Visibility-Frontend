@@ -201,6 +201,8 @@ export async function fetchOverallPresence(
     const params: Record<string, string> = {}
     if (filters.startDate) params['startDate'] = filters.startDate
     if (filters.endDate) params['endDate'] = filters.endDate
+    if(filters.platforms) params['platform'] = filters.platforms[0]
+
     params['contextId'] = projectId
 
     const response = await api.get(`/api/PresenceSummary/overall`, {
