@@ -25,7 +25,8 @@ import {
   type CitationResult,
   type PresenceApiResponse,
 } from '../services/dashboardService'
-import Platforms from '../components/filter/Platforms'
+import Platforms, { PlatformLogo } from '../components/filter/Platforms'
+import { APP_NAME } from '../utils/common'
 
 export default function PromptsPage() {
   const { currentProjectId } = useProject()
@@ -58,6 +59,8 @@ export default function PromptsPage() {
   }
   // Fetch data when filters or project changes
   useEffect(() => {
+    document.title = `Prompts | ${APP_NAME}`
+
     if (isAddPromptModalOpen) {
       return
     }
@@ -109,7 +112,12 @@ export default function PromptsPage() {
       <div className={styles.wrapper}>
         <div className={styles.headerRow}>
           <h1 className={styles.heading}>Prompts</h1>
-          <button className={styles.saveBtn}>Export</button>
+          <button
+            className={`${styles.saveBtn} print-hidden`}
+            onClick={() => window.print()}
+          >
+            Export
+          </button>
         </div>
 
         {/* Filter Section */}
@@ -366,17 +374,6 @@ export default function PromptsPage() {
                 title="Citations"
                 tooltipInfo="Percent of sources over period"
               />
-
-              {/* <GenericLineChart
-                title="Tag Presence (% of total)"
-                data={(
-                  promptData.promptSpecificData.dailyResponseData ?? []
-                ).map((o) => ({ date: o.date, Own: o.ownPresencePercentage }))}
-                xKey="date"
-                xFormatter={(d: any) => d}
-                yFormatter={(v: any) => `${v}%`}
-                series={[{ dataKey: 'Own', label: 'Own', color: '#fdba74' }]}
-              /> */}
             </section>
           </>
         )}
@@ -433,6 +430,36 @@ export default function PromptsPage() {
             )}
 
             {promptData?.isEmpty && <PromptDataTable data={[]} />}
+          </section>
+        )}
+
+        {promptData?.isPromptSpecificData && (
+          <section className={styles.dataSection}>
+            <h2 className={styles.subHeading}>Prompt Stats</h2>
+            <PromptDataTable
+              data={
+                promptData?.promptSpecificData.platformWiseData.map((o) => ({
+                  itemLogo: PlatformLogo(o.platform.toLowerCase()),
+                  itemId: promptData?.promptSpecificData.promptId,
+                  item:
+                    promptData?.promptSpecificData.promptText +
+                    `(${o.platform})`,
+                  totalResponses: o.ownPresencePercentage,
+                  totalVarietiesOfItem: 1,
+                  presenceData: o.competitorPresence,
+                })) || []
+              }
+              columns={[
+                'Prompt',
+                'Data',
+                'Presence',
+                'Citation',
+                'Competitors',
+              ]}
+              onRowClick={(filterKey: string) => {
+                updateFilters({ promptId: filterKey })
+              }}
+            />
           </section>
         )}
 

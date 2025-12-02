@@ -68,6 +68,7 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
             >
               {/* Tags Column */}
               <div className={styles.cell}>
+                <span className={styles.itemLogo}>{item.itemLogo}</span>
                 <span className={styles.tagText}>{item.item || 'No info'}</span>
               </div>
 

@@ -6,6 +6,7 @@ import {
 } from '../../services/contextService'
 import type { BrandInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
+import { APP_NAME } from '../../utils/common'
 
 const emptyBrand: BrandInfo = {
   name: '',
@@ -52,6 +53,7 @@ export default function BrandInfoSection() {
   })
 
   useEffect(() => {
+    document.title = `Context | ${APP_NAME}`
     //console.log(currentProjectId);
     // Load brand info from local storage or API
     if (currentProjectId && currentProjectId != '') {

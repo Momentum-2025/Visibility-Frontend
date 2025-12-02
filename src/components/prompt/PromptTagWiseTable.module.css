@@ -66,6 +66,9 @@
   font-size: 1rem;
 }
 
+.itemLogo{
+  margin:1em;
+}
 /* Data Column */
 .dataColumn {
   display: flex;
