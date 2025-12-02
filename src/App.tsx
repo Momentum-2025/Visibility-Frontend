@@ -17,9 +17,8 @@ function App() {
   return (
     <ProjectProvider>
       <AuthProvider>
-        {/* When deployed to GitHub Pages under /Visibility-Frontend/, set basename
-          so the router matches the trimmed path. */}
-        <BrowserRouter basename="/Visibility-Frontend">
+    
+        <BrowserRouter>
           <Routes>
             <Route element={<RequireAuth />}>
               <Route path="/dashboard" element={<DashboardPage />} />
