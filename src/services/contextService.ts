@@ -83,7 +83,7 @@ export interface BrandInfo {
   name: string
   description: string
   website: string
-  locationId: number
+  country: string
   createdBy: string
   createdOn: string
   updatedBy: string
@@ -212,5 +212,11 @@ export async function deleteTopic(projectId: string, topic: string) {
 
 export async function loadTopics(projectId: string): Promise<Topic[]> {
   const response = await api.get(`/api/context/topics/${projectId}`)
+  return response.data
+}
+
+// services/countriesService.ts
+export const fetchCountries = async () => {
+  const response = await api.get('/api/MasterData/countries')
   return response.data
 }

@@ -18,7 +18,7 @@ type Page = 'login' | 'otp' | 'success'
 
 // Google OAuth configuration
 const GOOGLE_CLIENT_ID =
-  '152869943056-66kfsoinb9spa6vj5il5phcmu8i0nkre.apps.googleusercontent.com'
+  '817764830864-4oi7nfocgjlq9jmao27b486vcv4lhsnj.apps.googleusercontent.com'
 const GOOGLE_REDIRECT_URI = window.location.origin + '/auth/callback' // or your specific callback URL
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 

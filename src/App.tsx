@@ -12,9 +12,14 @@ import OtpVerification from './pages/OtpVerificationPage'
 import AuthFlow from './pages/AuthFlow'
 import LandingPage from './pages/LandingPage'
 import CitationsPage from './pages/CitationsPage'
+// main.tsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <ProjectProvider>
       <AuthProvider>
     
@@ -36,6 +41,7 @@ function App() {
         </BrowserRouter>
       </AuthProvider>
     </ProjectProvider>
+    </QueryClientProvider>
   )
 }
 
