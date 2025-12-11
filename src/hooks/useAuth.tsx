@@ -57,8 +57,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return result.data.isNewUser
     }
 
-    localStorage.setItem('token', JSON.stringify(result.data.token)) // use result.token
-    localStorage.setItem('user', JSON.stringify(result.data?.user ?? { email: email, fullName:email.slice(0,email.length-10)}))
+    localStorage.setItem('token', JSON.stringify(result.data.tokenResponse.token))
+    localStorage.setItem('user', JSON.stringify({ email: result.data.userEmail, fullName:result.data.userEmail.slice(0,result.data.userEmail.length-10)}))
     // Save user/token to localStorage if needed
     const userProjects = await loadUserProjects() // implement this call
 
