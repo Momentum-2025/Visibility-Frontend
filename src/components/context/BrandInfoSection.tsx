@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
 import styles from './BrandInfoSection.module.css'
 import {
@@ -7,13 +8,14 @@ import {
 import type { BrandInfo } from '../../services/contextService'
 import { useProject } from '../../contexts/ProjectContext'
 import { APP_NAME } from '../../utils/common'
+import { useCountries } from '../../hooks/useCountries'
 
 const emptyBrand: BrandInfo = {
   name: '',
   description: '',
   id: '',
   website: '',
-  locationId: 0,
+  country: '',
   createdBy: '',
   createdOn: '',
   updatedBy: '',
@@ -39,6 +41,7 @@ const stringToArray = (str: string): string[] => {
 }
 
 export default function BrandInfoSection() {
+  const { data: countries, isLoading } = useCountries()
   const [brand, setBrand] = useState<BrandInfo>(emptyBrand)
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -73,7 +76,9 @@ export default function BrandInfoSection() {
   }, [currentProjectId])
 
   function onFieldChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) {
     const { name, value } = e.target
 
@@ -133,7 +138,7 @@ export default function BrandInfoSection() {
     (!brand.name &&
       !formValues.alternativeNames &&
       !brand.description &&
-      !brand.locationId &&
+      !brand.country &&
       !brand.website)
 
   return (
@@ -184,13 +189,23 @@ export default function BrandInfoSection() {
         </label>
         <label>
           <span>Country</span>
-          <input
-            name="country"
-            value={brand?.locationId}
-            onChange={onFieldChange}
+          {isLoading && <div>Loading Countries..</div>}
+          <select
+          name='country'
+            value={brand.country ?? ''}
+            onChange={(e) => onFieldChange(e)}
             className={styles.input}
-            placeholder="Brand's primary country"
-          />
+            disabled={isLoading}
+          >
+            <option value="" disabled>
+              {isLoading ? 'Loading...' : 'Select Country'}
+            </option>
+            {countries?.map((country: any) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
         </label>
         <label>
           <span>Website</span>

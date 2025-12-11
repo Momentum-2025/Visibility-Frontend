@@ -28,7 +28,11 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   const handleReset = () => {
     setLocalFilters({})
   }
-
+  const platformLabels: Record<string, string> = {
+    openai: 'ChatGPT',
+    google: 'Google Ai Overviews',
+    perplexity: 'Perplexity',
+  }
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -113,13 +117,15 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               </label>
             </div>
           </div> */}
-
           {/* Platforms Filter */}
           <div className={styles.filterGroup}>
             <label className={styles.label}>Platforms</label>
             <div className={styles.checkboxGroup}>
               {['openai', 'google', 'perplexity'].map((platform) => (
-                <label key={platform} className={styles.checkboxLabel}>
+                <label
+                  key={platform}
+                  className={styles.checkboxLabel}
+                >
                   <input
                     type="checkbox"
                     checked={
@@ -132,7 +138,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                     }}
                   />
 
-                  {platform}
+                  {platformLabels[platform]}
                 </label>
               ))}
             </div>

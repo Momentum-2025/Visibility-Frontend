@@ -49,6 +49,17 @@ export async function handleLogin(payload: LoginPayload) {
   }
 }
 
+export async function handleGoogleLogin(authCode: string, redirectUrl:string) {
+  try {
+    const payload = {"code":authCode, "redirectUri":redirectUrl};
+    const res = await api.post('/api/auth/google-login', payload );
+    if (!res.data.isAuthenticated) throw new Error('Login failed');
+    return await res.data; // expects { token, user }
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function handleSignup(payload: SignupPayload) {
   try {
     const res = await fetch('/api/auth/signup', {

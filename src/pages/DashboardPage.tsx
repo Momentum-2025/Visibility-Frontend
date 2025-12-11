@@ -283,7 +283,7 @@ export default function DashboardPage() {
             )}
             xKey="date"
             xFormatter={(d: any) => d}
-            yFormatter={(v: any) => `${v}%`}
+            yFormatter={(v: any) => `${v ?? 0}%`}
             series={Object.entries(overallPresence?.competitorDetails ?? {})
               .map(([key, comp]) => ({
                 dataKey: key,
@@ -291,8 +291,10 @@ export default function DashboardPage() {
                 color: stringToColor(key),
                 overallPercentage: comp.presencePercentage,
               }))
-              .sort((a, b) => b.overallPercentage - a.overallPercentage)
-              .slice(0, 5)}
+              .sort((a, b) =>b.overallPercentage - a.overallPercentage)
+              .filter((o,i) => o.dataKey == "Hevo" || i < 7)
+              .slice(0, 8)
+            }
           />
         </section>
 

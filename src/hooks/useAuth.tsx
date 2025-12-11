@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 import {
   handleEmailLogin,
   handleEmailLoginOtpVerification,
+  handleGoogleLogin,
   handleLogin,
   handleSignup,
 } from '../services/authService'
@@ -105,12 +106,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function googleLogin(googleToken: string) {
     // call backend with Google token to authenticate or create user
-    const payload = { email: '', password: undefined, googleToken }
-    const result = await handleLogin(payload)
+    // const payload = { email: '', password: undefined, googleToken }
+    const result = await handleGoogleLogin(googleToken, "http://localhost:5173/auth/callback")
 
-    setUser(result.user)
-    localStorage.setItem('user', JSON.stringify(result.user))
-    localStorage.setItem('token', JSON.stringify(result.token))
+    localStorage.setItem('token', JSON.stringify(result.tokenResponse.token))
+    localStorage.setItem('user', JSON.stringify({ email: result.userEmail, fullName:result.userEmail.slice(0,result.userEmail.length-10)}))
+    // Save user/token to localStorage if needed
+    const userProjects = await loadUserProjects() // implement this call
+
+    if (userProjects.length > 0) {
+      const lastUsedProjectId = userProjects[0].id // or your preferred logic
+      setProjects(
+        userProjects.map((b) => ({
+          id: b.id ?? '',
+          name: b.name,
+        })),
+      )
+      setCurrentProjectId(lastUsedProjectId ?? '') // from useProject hook
+    } else {
+      // navigate('/context')
+      // setCurrentProjectId('68d4012cb35966b61d4cf679')
+    }
+    setUser({ email: result.userEmail, fullName:result.userEmail.slice(0,result.userEmail.length-10)})
     // Save token if needed: localStorage.setItem('token', result.token)
   }
 
