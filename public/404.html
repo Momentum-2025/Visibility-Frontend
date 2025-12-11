@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Redirecting...</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script type="text/javascript">
+			// GitHub Pages SPA redirect for direct deep links like /dashboard
+			// For hash routing, query params must come AFTER the hash
+			(function () {
+				var l = window.location;
+
+				// For GitHub project pages, the first path segment is the repo name.
+				// This app is deployed as a project page, so we use segmentCount = 1.
+				var segmentCount = 1;
+
+				var pathSegments = l.pathname.split('/');
+				var base = pathSegments.slice(0, 1 + segmentCount).join('/');
+				var remaining = pathSegments.slice(1 + segmentCount).join('/');
+
+				var origin =
+					l.protocol +
+					'//' +
+					l.hostname +
+					(l.port ? ':' + l.port : '');
+
+				// Result: origin + base + '#/' + remaining + search
+				// Example for OAuth callback:
+				//   /Visibility-Frontend/auth/callback?code=...&state=...
+				// becomes
+				//   /Visibility-Frontend#/auth/callback?code=...&state=...
+				// This puts the route in the hash and preserves query params after it
+				var newUrl =
+					origin +
+					base +
+					'#/' +
+					remaining +
+					(l.search || '') +
+					(l.hash ? l.hash.substring(1) : '');
+
+				window.location.replace(newUrl);
+			})();
+		</script>
+	</head>
+	<body>
+		<p>Redirecting...</p>
+	</body>
+</html>
+

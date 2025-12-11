@@ -19,7 +19,15 @@ type Page = 'login' | 'otp' | 'success'
 // Google OAuth configuration
 const GOOGLE_CLIENT_ID =
   '817764830864-4oi7nfocgjlq9jmao27b486vcv4lhsnj.apps.googleusercontent.com'
-const GOOGLE_REDIRECT_URI = window.location.origin + '/auth/callback' // or your specific callback URL
+
+// Make redirect URI work on both localhost and GitHub Pages project page
+const getBasePath = () => {
+  const segments = window.location.pathname.split('/').filter(Boolean)
+  return segments.length > 0 ? `/${segments[0]}` : ''
+}
+
+const GOOGLE_REDIRECT_URI =
+  window.location.origin + getBasePath() + '/auth/callback'
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 
 const AuthFlow: React.FC = () => {
@@ -40,14 +48,21 @@ const AuthFlow: React.FC = () => {
     if (user != null) {
       navigate('/dashboard')
     }
-    const urlParams = new URLSearchParams(window.location.search)
+    
+    // With HashRouter, query params are in the hash portion of the URL
+    // Extract query params from hash: #/auth/callback?code=...&state=...
+    const hashParts = window.location.hash.split('?')
+    const queryString = hashParts.length > 1 ? hashParts[1] : window.location.search.substring(1)
+    const urlParams = new URLSearchParams(queryString)
+    
     const code = urlParams.get('code')
     const error = urlParams.get('error')
 
     if (error) {
       setError('Google sign-in was cancelled or failed')
       // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname)
+      const cleanHash = hashParts[0] || window.location.hash
+      window.history.replaceState({}, document.title, cleanHash)
       return
     }
     //console.log(code);
@@ -84,7 +99,11 @@ const AuthFlow: React.FC = () => {
 
     try {
       // Verify state to prevent CSRF
-      const urlParams = new URLSearchParams(window.location.search)
+      // Extract query params from hash for HashRouter
+      const hashParts = window.location.hash.split('?')
+      const queryString = hashParts.length > 1 ? hashParts[1] : window.location.search.substring(1)
+      const urlParams = new URLSearchParams(queryString)
+      
       const returnedState = urlParams.get('state')
       const savedState = sessionStorage.getItem('google_oauth_state')
 
@@ -98,11 +117,9 @@ const AuthFlow: React.FC = () => {
         await googleLogin(code)
         // Clean up
         sessionStorage.removeItem('google_oauth_state')
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
-        )
+        // Clean hash to remove query params
+        const cleanHash = hashParts[0] || '#/'
+        window.history.replaceState({}, document.title, cleanHash)
 
         // Navigate to success or dashboard
         setCurrentPage('success')
@@ -112,7 +129,9 @@ const AuthFlow: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Google sign-in failed. Please try again.')
       // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname)
+      const hashParts = window.location.hash.split('?')
+      const cleanHash = hashParts[0] || '#/'
+      window.history.replaceState({}, document.title, cleanHash)
     } finally {
       setIsLoading(false)
     }
