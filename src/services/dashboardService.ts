@@ -1,6 +1,7 @@
 import axios from 'axios'
 import api from './contextService' // your preconfigured axios instance
-import type { PromptFilters } from '../hooks/useFilters'
+import type { PageFilters } from '../hooks/useFilters'
+import type { TopCitedDomain } from './citationsDataService'
 //new
 export interface CompetitorDetail {
   presenceCount: number
@@ -100,7 +101,8 @@ export interface CitationResult {
   ownBrandCitation: CitationBreakdown;
   thirdPartyCitation: CitationBreakdown;
   competitorCitation: CitationBreakdown;
-  dayWiseOwnBrandData:{date:string,percentage:number}[]
+  dayWiseOwnBrandData:{date:string,percentage:number}[];
+  topCitedDomains: TopCitedDomain[]
 }
 
 
@@ -195,7 +197,7 @@ export async function fetchDashboardOverview(
 
 export async function fetchOverallPresence(
   projectId: string,
-  filters: PromptFilters,
+  filters: PageFilters,
 ): Promise<PresenceApiResponse | null> {
   try {
     const params: Record<string, string> = {}
@@ -258,7 +260,7 @@ export async function fetchPresence(
 
 export async function fetchCitations(
   projectId: string,
-  filters?: PromptFilters,
+  filters?: PageFilters,
 ): Promise<CitationResult | null> {
   try {
     const params: Record<string, unknown> = {}

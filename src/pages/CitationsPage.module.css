@@ -112,7 +112,24 @@
 .metricTiles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 2.8rem 2.8rem;
+  gap: 1rem 1rem;
   align-content: start;
-  padding-bottom: 2rem
+  /* padding-bottom: 1rem */
+}
+
+.input {
+  font-size: 1rem;
+  padding: 10px 13px;
+  border: 1px solid #dde2ee;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #22304a;
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 1em;
+}
+
+.input:focus {
+  border-color: #99c3f3;
+  background: #fff;
 }

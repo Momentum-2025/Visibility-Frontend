@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // PromptDataService.ts
 
-import type { PromptFilters } from '../hooks/useFilters'
+import type { PageFilters } from '../hooks/useFilters'
 import api from './contextService'
 import type { DateRange } from './dashboardService'
 import type {
@@ -76,7 +76,7 @@ export type CompetitorMapResponse = {
 
 export async function fetchPromptPageData(
   projectId: string,
-  filters: PromptFilters,
+  filters: PageFilters,
 ): Promise<PromptDisplayData> {
   const result: Partial<PromptDisplayData> = {}
   if (projectId == '') {
@@ -106,7 +106,7 @@ export async function fetchPromptPageData(
         endDate: filters.endDate,
       },
     )
-  } else if (filters.groupBy == 'prompt') {
+  } else if (filters.groupPromptsBy == 'prompt') {
     result.seedPromptData = await fetchPromptObservations(projectId)
   } else {
     result.isTagWiseData = true

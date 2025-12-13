@@ -145,7 +145,7 @@ export function useFilters<T extends Record<string, any>>(
 }
 
 // Example usage with PromptFilters
-export interface PromptFilters {
+export interface PageFilters {
   startDate: string
   endDate: string
   branded?: boolean
@@ -154,7 +154,9 @@ export interface PromptFilters {
   sortBy?: string
   sortOrder: 'asc' | 'desc'
   promptId?:string,
-  groupBy?:string
+  groupPromptsBy?:string,
+  groupCitBy?:string
+  domain?:string
 }
 
 export const usePromptFilters = () => {
@@ -167,10 +169,12 @@ export const usePromptFilters = () => {
       tags: [],
       sortBy: undefined,
       sortOrder: 'desc' as const,
-      groupBy:'tag',
-      promptId:undefined
+      groupPromptsBy:undefined,
+      groupCitBy:undefined,
+      promptId:undefined,
+      domain:undefined
     },
   }), [])
 
-  return useFilters<PromptFilters>(config)
+  return useFilters<PageFilters>(config)
 }

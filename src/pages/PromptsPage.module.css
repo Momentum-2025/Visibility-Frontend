@@ -135,18 +135,18 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2.8rem 2.8rem;
   align-content: start;
-  padding-bottom: 2rem;
+  /* padding-bottom: 1rem; */
 }
 .metricTiles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2.8rem 2.8rem;
   align-content: start;
-  padding-bottom: 2rem;
+  /* padding-bottom: 1rem; */
 }
 
 .dataSection {
-  margin-top: 48px;
+  margin-top: 1em;
 }
 .subHeading {
   font-size: 1.2rem;
@@ -237,9 +237,10 @@
 .metricTiles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 2.8rem 2.8rem;
+  gap: 1rem 1rem;
   align-content: start;
   padding-bottom: 1rem;
+  max-height: 1fr;
 }
 .addPromtText {
   display: none;
