@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
@@ -23,7 +23,7 @@ function App() {
     <ProjectProvider>
       <AuthProvider>
     
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route element={<RequireAuth />}>
               <Route path="/dashboard" element={<DashboardPage />} />
@@ -38,7 +38,7 @@ function App() {
             <Route path="/auth/callback" element={<AuthFlow />} />
             <Route path="/landing" element={<LandingPage />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </AuthProvider>
     </ProjectProvider>
     </QueryClientProvider>
