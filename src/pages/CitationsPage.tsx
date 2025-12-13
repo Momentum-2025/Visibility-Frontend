@@ -37,6 +37,7 @@ export default function CitationsPage() {
   const [domainWiseData, setDomainWiseData] =
     useState<CitationStatsResponse | null>(null)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+  const [groupBy, setGroupBy] = useState<string>('domain')
 
   const formatDateRange = () => {
     const start = new Date(filters.startDate)
@@ -182,7 +183,7 @@ export default function CitationsPage() {
               'third_party_percentage',
             ]}
             labels={['Brand', 'Competitor', 'Third Party']}
-            colors={['#fdba74', 'rgb(102,85,155)', '#fd7474ff']}
+            colors={['#28c191ff', 'rgba(25, 83, 128, 1)', '#ff5151ff']}
             totalKey="brand_percentage"
             title="Citations"
             tooltipInfo="Percent of sources over period"
@@ -194,38 +195,58 @@ export default function CitationsPage() {
             xKey="date"
             xFormatter={(d: any) => d}
             yFormatter={(v: any) => `${v}%`}
-            series={(domainWiseData?.topCitedDomains || [])
+            series={(citationsArray?.topCitedDomains || [])
               .map((o) => ({
                 dataKey: o.domain,
                 label: o.domain,
-                color: stringToColor(o.domain+'123'),
+                color: stringToColor(o.domain + '123'),
                 overallPercentage: o.percentage,
               }))
-              .sort((a, b) => b.overallPercentage - a.overallPercentage)
-              .slice(0, 5)}
+              .sort((a, b) => a.dataKey == 'Others'? 0 : b.overallPercentage - a.overallPercentage)
+              .filter((o, i) => o.dataKey.includes('hevo')  || i < 6)
+              .slice(0, 6)}
           />
         </section>
         <section className={styles.dataSection}>
-          <h2 className={styles.subHeading}>Domains</h2>
+          {/* <h2 className={styles.subHeading}>Domains</h2> */}
+          <select
+            name="group-by"
+            value={groupBy}
+            onChange={(e) => {
+              setGroupBy(e.target.value);
+              updateFilters({groupCitBy:e.target.value})
+            }}
+            className={styles.input}
+            disabled={false}
+            title='By'
+          >
+            <option key={'domain'} value={'domain'}>
+              Domain
+            </option>
+            <option key={'url'} value={'url'}>
+              Url
+            </option>
+          </select>
           <PromptDataTable
             data={
               domainWiseData?.domainWiseDetails.map((o) => ({
                 itemId: o.domain,
                 item: o.domain,
-                totalResponses: o.totalOccurrences,
-                totalVarietiesOfItem: o.promptCount,
+                totalResponses: [o.totalOccurrences,'Occurrences'],
+                totalVarietiesOfItem: [o.promptCount, 'Prompts'],
                 presenceData: [],
+                ownPresencePercentage:-1
               })) || []
             }
             columns={[
-              'Domain',
+              groupBy == 'domain' ? 'Domain':'Url',
               'Data',
               'Brand Mentions',
               'Competitor Mentions',
-              'Domain Topics',
+              'Topics',
             ]}
-            onRowClick={() => {
-              //   updateFilters({ promptId: filterKey })
+            onRowClick={(filterKey) => {
+              if(groupBy == 'domain') updateFilters({ domain: filterKey })
             }}
           />
         </section>

@@ -1,13 +1,13 @@
 // components/FilterModal.tsx
 import React, { useState } from 'react'
 import styles from './FilterModal.module.css'
-import type { PromptFilters } from '../../hooks/useFilters'
+import type { PageFilters } from '../../hooks/useFilters'
 
 interface FilterModalProps {
   isOpen: boolean
   onClose: () => void
-  currentFilters: PromptFilters
-  onApply: (filters: Partial<PromptFilters>) => void
+  currentFilters: PageFilters
+  onApply: (filters: Partial<PageFilters>) => void
 }
 
 export const FilterModal: React.FC<FilterModalProps> = ({
@@ -16,7 +16,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   currentFilters,
   onApply,
 }) => {
-  const [localFilters, setLocalFilters] = useState<Partial<PromptFilters>>({})
+  const [localFilters, setLocalFilters] = useState<Partial<PageFilters>>({})
 
   if (!isOpen) return null
 

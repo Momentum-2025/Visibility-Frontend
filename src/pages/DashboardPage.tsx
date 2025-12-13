@@ -27,7 +27,7 @@ import { usePromptFilters } from '../hooks/useFilters'
 import { FilterModal } from '../components/filter/FilterModal'
 import { useNavigate } from 'react-router-dom'
 import Platforms from '../components/filter/Platforms'
-import { APP_NAME } from '../utils/common'
+import { APP_NAME, platformLabels } from '../utils/common'
 
 export default function DashboardPage() {
   // const [stats, setStats] = useState<DashboardOverview | null>(null)
@@ -190,7 +190,7 @@ export default function DashboardPage() {
           {/* Platform Filter */}
           {filters.platforms && filters.platforms.length > 0 && (
             <button className={styles.filterBtn}>
-              Platforms: {filters.platforms.join(', ')}
+              Platforms: {platformLabels[filters.platforms[0]]}
               <span
                 className={styles.closeX}
                 onClick={(e) => {

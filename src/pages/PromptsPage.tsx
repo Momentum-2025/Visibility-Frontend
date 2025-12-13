@@ -26,7 +26,8 @@ import {
   type PresenceApiResponse,
 } from '../services/dashboardService'
 import Platforms, { PlatformLogo } from '../components/filter/Platforms'
-import { APP_NAME } from '../utils/common'
+import { APP_NAME, stringToColor } from '../utils/common'
+import { GenericLineChart } from '../components/diagram/GenericLineChart'
 
 export default function PromptsPage() {
   const { currentProjectId } = useProject()
@@ -241,6 +242,23 @@ export default function PromptsPage() {
         {promptData?.isTagWiseData && (
           <>
             <section className={styles.metricTiles}>
+              <GenericLineChart
+                title="Competitive Presence (% of total)"
+                data={[]}
+                xKey="date"
+                xFormatter={(d: any) => d}
+                yFormatter={(v: any) => `${v ?? 0}%`}
+                series={Object.entries(overallPresence?.competitorDetails ?? {})
+                  .map(([key, comp]) => ({
+                    dataKey: key,
+                    label: key,
+                    color: stringToColor(key),
+                    overallPercentage: comp.presencePercentage,
+                  }))
+                  .sort((a, b) => b.overallPercentage - a.overallPercentage)
+                  .filter((o, i) => o.dataKey == 'Hevo' || i < 7)
+                  .slice(0, 5)}
+              />
               <PieCard
                 data={mapDashboardPresenceToChartEntries(
                   overallPresence?.dayWisePresence || [],
@@ -289,6 +307,23 @@ export default function PromptsPage() {
 
         {promptData?.isTagSpecificData && (
           <section className={styles.metricTiles}>
+            <GenericLineChart
+              title="Competitive Presence (% of total)"
+              data={[]}
+              xKey="date"
+              xFormatter={(d: any) => d}
+              yFormatter={(v: any) => `${v ?? 0}%`}
+              series={Object.entries(overallPresence?.competitorDetails ?? {})
+                .map(([key, comp]) => ({
+                  dataKey: key,
+                  label: key,
+                  color: stringToColor(key),
+                  overallPercentage: comp.presencePercentage,
+                }))
+                .sort((a, b) => b.overallPercentage - a.overallPercentage)
+                .filter((o, i) => o.dataKey == 'Hevo' || i < 7)
+                .slice(0, 5)}
+            />
             <PieCard
               data={mapPresenceToChartEntries(
                 promptData?.tagSpecificData.tagWiseDayWisePresence || [],
@@ -338,6 +373,23 @@ export default function PromptsPage() {
             </div>
 
             <section className={styles.metricTiles}>
+              <GenericLineChart
+                title="Competitive Presence (% of total)"
+                data={[]}
+                xKey="date"
+                xFormatter={(d: any) => d}
+                yFormatter={(v: any) => `${v ?? 0}%`}
+                series={Object.entries(overallPresence?.competitorDetails ?? {})
+                  .map(([key, comp]) => ({
+                    dataKey: key,
+                    label: key,
+                    color: stringToColor(key),
+                    overallPercentage: comp.presencePercentage,
+                  }))
+                  .sort((a, b) => b.overallPercentage - a.overallPercentage)
+                  .filter((o, i) => o.dataKey == 'Hevo' || i < 7)
+                  .slice(0, 5)}
+              />
               <PieCard
                 data={mapPresenceToChartEntries(
                   promptData?.promptSpecificData.dailyResponseData || [],
@@ -389,9 +441,12 @@ export default function PromptsPage() {
                 data={promptData?.tagWiseData.map((o) => ({
                   itemId: o.tag,
                   item: o.tag,
-                  totalResponses: o.totalResponses,
-                  totalVarietiesOfItem: o.totalPrompts,
+                  totalResponses: [o.totalResponses, 'Responses'],
+                  totalVarietiesOfItem: [o.totalPrompts, 'Prompts'],
                   presenceData: o.presenceData,
+                  ownPresencePercentage: o.presenceData.filter(
+                    (o) => o.isOwnCompany,
+                  )[0].presencePercentage,
                 }))}
                 onRowClick={(filterKey: string) => {
                   updateFilters({ tags: [filterKey] })
@@ -411,9 +466,12 @@ export default function PromptsPage() {
                   promptData?.tagSpecificData.promptWiseAnalysis.map((o) => ({
                     itemId: o.promptId,
                     item: o.promptText,
-                    totalResponses: o.totalResponses,
-                    totalVarietiesOfItem: 0,
+                    totalResponses: [o.totalResponses, 'Responses'],
+                    totalVarietiesOfItem: [0, ''],
                     presenceData: o.presenceData,
+                    ownPresencePercentage: o.presenceData.filter(
+                      (o) => o.isOwnCompany,
+                    )[0].presencePercentage,
                   })) || []
                 }
                 columns={[
@@ -444,9 +502,10 @@ export default function PromptsPage() {
                   item:
                     promptData?.promptSpecificData.promptText +
                     `(${o.platform})`,
-                  totalResponses: o.ownPresencePercentage,
-                  totalVarietiesOfItem: 1,
+                  totalResponses: [o.totalResponses, 'Responses'],
+                  totalVarietiesOfItem: [1, 'Prompts'],
                   presenceData: o.competitorPresence,
+                  ownPresencePercentage: o.ownPresencePercentage,
                 })) || []
               }
               columns={[

@@ -93,7 +93,7 @@ export function PieCard({
             options={{
               plugins: {
                 legend: { display: false },
-                tooltip: { enabled: true },
+                tooltip: { enabled: false },
               },
               cutout: '50%',
               maintainAspectRatio: false,
@@ -125,7 +125,8 @@ export function PieCard({
               maintainAspectRatio: false,
               plugins: {
                 legend: { display: false },
-                tooltip: { enabled: false },
+                tooltip: { enabled: true},
+                
               },
               scales: {
                 x: {

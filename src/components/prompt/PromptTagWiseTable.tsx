@@ -57,7 +57,9 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
           <div className={styles.headerCell}>{columns[4]}</div>
         </div>
 
-        {data.length == 0 && <div className={styles.emptyTable}> No data to display</div>}
+        {data.length == 0 && (
+          <div className={styles.emptyTable}> No data to display</div>
+        )}
         {/* Rows */}
         {data.map((item, index) => (
           <React.Fragment key={index}>
@@ -75,19 +77,19 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
               {/* Data Column */}
               <div className={styles.cell}>
                 <div className={styles.dataColumn}>
-                  {item.totalVarietiesOfItem > 0 && (
+                  {item.totalVarietiesOfItem[0] as number > 0 && (
                     <div className={styles.dataItem}>
                       <span className={styles.dataValue}>
-                        {item.totalVarietiesOfItem}
+                        {item.totalVarietiesOfItem[0]}
                       </span>
-                      <span className={styles.dataLabel}>prompts</span>
+                      <span className={styles.dataLabel}>{item.totalVarietiesOfItem[1] || 'prompts'}</span>
                     </div>
                   )}
                   <div className={styles.dataItem}>
                     <span className={styles.dataValue}>
-                      {item.totalResponses}
+                      {item.totalResponses[0]}
                     </span>
-                    <span className={styles.dataLabel}>responses</span>
+                    <span className={styles.dataLabel}>{item.totalResponses[1]}</span>
                   </div>
                 </div>
               </div>
@@ -107,7 +109,10 @@ const PromptDataTable: React.FC<TagPresenceTableProps> = ({
                   </div> */}
                   <div className={styles.metricStats}>
                     <span className={styles.metricValue}>
-                      {item.presenceData[0]?.presencePercentage || 0}%
+                      {(item.ownPresencePercentage < 0
+                        ? item.presenceData[0]?.presencePercentage
+                        : item.ownPresencePercentage) || 0}
+                      %
                     </span>
                     {/* <span className={styles.metricChange}>-21%</span> */}
                   </div>

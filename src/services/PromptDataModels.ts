@@ -26,8 +26,9 @@ export interface TableRowData {
   itemLogo?:JSX.Element
   itemId: string
   item: string
-  totalResponses: number
-  totalVarietiesOfItem: number
+  totalResponses: (number | string)[]
+  totalVarietiesOfItem: (number | string)[]
+  ownPresencePercentage:number
   presenceData: PresenceItem[] | []
 }
 
